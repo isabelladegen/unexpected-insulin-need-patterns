@@ -8,9 +8,15 @@ A simple Streamlit app template for you to modify!
 
 1. Install the requirements
 
-   ```
-   $ pip install -r requirements.txt
-   ```
+If you use conda to manage your Python environment use the following commands:
+
+1. ```conda env create -f conda.yml```
+2. ```conda activate streamlit-insulin-needs```
+3. ```conda env update -n tmp-22 --file conda.yml --prune```
+
+For pip use
+1. ``` $ pip install -r requirements.txt```
+
 
 2. Run the app
 

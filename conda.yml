@@ -1,0 +1,20 @@
+name: streamlit-insulin-needs
+channels:
+  - conda-forge
+  - maxibor
+  - defaults
+  - bioconda # for fitter
+dependencies:
+  - python=3.11
+  - streamlit
+  - numpy
+  - matplotlib
+  - seaborn
+  - pandas
+  - scipy
+  - seaborn
+  - pytest
+  - pyhamcrest
+  - plotly
+  - pip
+#  - pip:
