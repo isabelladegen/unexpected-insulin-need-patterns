@@ -201,6 +201,8 @@ contact_form = """
      <input type="text" name="name" placeholder="Your name" required>
      <input type="email" name="email" placeholder="Your email" required>
      <input type="hidden" name="_subject" value="Streamline Contact for insulin need demo app">
+     <input type="hidden" name="_next" value="https://insulin-need-patterns.streamlit.app/">
+     <input type="hidden" name="_captcha" value="true">
      <textarea name="message" placeholder="Your message here"></textarea>
      <button type="submit">Send</button>
 </form>
