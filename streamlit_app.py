@@ -195,6 +195,8 @@ st.markdown(
     approaches. Further research is needed to identify and quantify the factors that cause these patterns.''')
 
 st.header(":mailbox: Contact us", anchor='contact-us')
+
+# <form action="https://formsubmit.co/3d80f75bd493b7edbca0a868b9c6dbe6" method="POST">
 contact_form = """
 <form action="https://formsubmit.co/3d80f75bd493b7edbca0a868b9c6dbe6" method="POST">
      <input type="hidden" name="_captcha" value="false">
@@ -204,7 +206,9 @@ contact_form = """
      <input type="hidden" name="_next" value="https://insulin-need-patterns.streamlit.app/?embed=true">
      <input type="hidden" name="_captcha" value="true">
      <textarea name="message" placeholder="Your message here"></textarea>
-     <button type="submit">Send</button>
+     <button type="submit" class="sendbutton">
+        <span class="sendbutton__text">Send</span>
+     </button>
 </form>
 """
 
