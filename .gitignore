@@ -5,6 +5,11 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#jetbrains
+.idea/
+.DS_Store
+*.iml
+
 # C extensions
 *.so
 
