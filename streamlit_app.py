@@ -22,6 +22,9 @@ st.markdown('''
 
 An interactive dashboard exploring  patterns in insulin needs, carbohydrate intake, and glucose levels from automated 
 insulin delivery systems. You can read the full paper on JMIRx Med: http://dx.doi.org/10.2196/44384.
+
+*This site is under construction and the figures are completely fictional. The text is the abstract from the paper
+that needs updating and shortening for this format.*
 ''')
 
 st.header('Background')
@@ -74,6 +77,11 @@ st.markdown(
     while COB and IG were most different (mean distance 11.43, SD 2.6), suggesting that AID attempts to counteract both 
     observed and unobserved factors that impact IG.
     ''')
+
+st.markdown('''
+** These graphs are currently completely made up. They are hre just to give an idea of how the results could be 
+demonstrated in an interactive way.**
+''')
 
 pattern_type = st.selectbox(
     "Choose pattern to explore:",
