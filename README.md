@@ -1,7 +1,5 @@
 # Beyond expected patterns in insulin needs for T1D
 
-A simple Streamlit app template for you to modify!
-
 [![Open app](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://insulin-need-patterns.streamlit.app/)
 
 ### How to run it on your own machine
