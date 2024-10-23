@@ -1,19 +1,27 @@
 # Beyond expected patterns in insulin needs for T1D
+Explore result:
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://insulin-need-patterns.streamlit.app/)
 
-[![Open app](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://insulin-need-patterns.streamlit.app/)
 
 ### How to run it on your own machine
 
 1. Install the requirements
 
-For conda:
+   For conda:
+   ```
+   conda env create -f conda.yml
+   ```
+   ```
+   conda activate streamlit-insulin-needs
+   ```
+   ```
+   conda env update -n streamlit-insulin-needs --file conda.yml --prune
+   ```
 
-- ```conda env create -f conda.yml```
-- ```conda activate streamlit-insulin-needs```
-- ```conda env update -n streamlit-insulin-needs --file conda.yml --prune```
-
-For pip 
-- ``` $ pip install -r requirements.txt```
+   For pip 
+   ``` 
+   $ pip install -r requirements.txt
+   ```
 
 
 2. Run the app
