@@ -8,12 +8,18 @@ from plotly.subplots import make_subplots
 st.set_page_config(page_title="Unexpected insulin needs", layout="wide")
 
 st.sidebar.markdown('''
-# Content
-- [Background](#background)
-- [Objective](#objective)
-- [Methods](#methods)
-- [Results](#results)
-- [Conclusions](#conclusions)
+# Content	
+:clipboard: [Background](#background)
+
+:dart: [Objective](#objective)
+
+:microscope: [Methods](#methods)
+
+:bar_chart: [Results](#results)
+
+:bulb: [Conclusions](#conclusions)
+
+:mailbox: [Contact us](#contact-us)
 ''', unsafe_allow_html=True)
 
 st.title("Patterns in insulin needs of people with Type 1 Diabetes")
@@ -27,7 +33,7 @@ insulin delivery systems. You can read the full paper on JMIRx Med: http://dx.do
 that needs updating and shortening for this format.*
 ''')
 
-st.header('Background')
+st.header(':clipboard: Background', anchor='background')
 st.markdown(
     '''
     Type 1 Diabetes (T1D) is a chronic condition in which the body produces too little insulin, a hormone needed to 
@@ -39,7 +45,7 @@ st.markdown(
     understanding and treatment of T1D.
     ''')
 
-st.header('Objective')
+st.header(':dart: Objective', anchor='objective')
 st.markdown(
     '''
     The aim is to discover unexpected temporal patterns in insulin needs and to analyse how frequently these occur. 
@@ -51,7 +57,7 @@ st.markdown(
     
     ''')
 
-st.header('Methods')
+st.header(':microscope: Methods', anchor='methods')
 st.markdown(
     '''
     We analysed time series data on insulin on board (IOB), carbohydrates on board (COB) and interstitial glucose 
@@ -63,7 +69,7 @@ st.markdown(
     and IG for the clustered days was analysed using Granger causality.
     ''')
 
-st.header('Results')
+st.header(':bar_chart: Results', anchor='results')
 st.markdown(
     '''
     On average, 13.5 participants had unexpected patterns and 9.9 had expected patterns. 
@@ -88,6 +94,7 @@ pattern_type = st.selectbox(
     ["Overnight Patterns", "Post-Meal Patterns", "Daily Clusters"]
 )
 
+
 # Function to load your data
 @st.cache_data  # This caches the data to improve performance
 def load_data():
@@ -100,6 +107,7 @@ def load_data():
         'carbs': [0, 0, 0, 0, 0, 0, 0, 0] * 3
     })
     return df
+
 
 # Load the data
 df = load_data()
@@ -179,10 +187,32 @@ with col3:
         value="5.08 ± 2.25"
     )
 
-
-st.header('Conclusions')
+st.header(':bulb: Conclusions', anchor='conclusions')
 st.markdown(
     '''Our study shows that unexpected patterns in the insulin needs of people with T1D are as common as expected 
     patterns. Unexpected patterns cannot be explained by carbohydrates alone. 
     Our results highlight the complexity of glucose regulation and emphasise the need for personalised treatment 
     approaches. Further research is needed to identify and quantify the factors that cause these patterns.''')
+
+st.header(":mailbox: Contact us", anchor='contact-us')
+contact_form = """
+<form action="https://formsubmit.co/3d80f75bd493b7edbca0a868b9c6dbe6" method="POST">
+     <input type="hidden" name="_captcha" value="false">
+     <input type="text" name="name" placeholder="Your name" required>
+     <input type="email" name="email" placeholder="Your email" required>
+     <input type="hidden" name="_subject" value="Streamline Contact for insulin need demo app">
+     <textarea name="message" placeholder="Your message here"></textarea>
+     <button type="submit">Send</button>
+</form>
+"""
+
+st.markdown(contact_form, unsafe_allow_html=True)
+
+
+# Use Local CSS File
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+
+local_css("style/style.css")
