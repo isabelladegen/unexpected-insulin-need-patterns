@@ -29,7 +29,7 @@ st.markdown('''
 An interactive dashboard exploring  patterns in insulin needs, carbohydrate intake, and glucose levels from automated 
 insulin delivery systems. You can read the full paper on JMIRx Med: http://dx.doi.org/10.2196/44384.
 
-*:warning: This site is under construction and the figures are completely fictional. The text is the abstract from the paper
+:warning: *This site is under construction and the figures are completely fictional. The text is the abstract from the paper
 that needs updating and shortening for this format. :warning:*
 ''')
 
@@ -85,7 +85,7 @@ st.markdown(
     ''')
 
 st.markdown('''
-*::warning:These graphs are currently fictional. Just to give an idea of how the results could be 
+:warning: *These graphs are currently fictional. Just to give an idea of how the results could be 
 presented in an interactive way.*
 ''')
 
