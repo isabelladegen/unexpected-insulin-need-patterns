@@ -17,6 +17,7 @@ st.logo(
         link="https://www.bristol.ac.uk/cdt/interactive-ai/",
         icon_image=UNI_BRISTOL_ICON)
 st.sidebar.markdown('''
+# UKRI Center for Doctoral Training in Interactive AI
 # Content	
 :clipboard: [Background](#background)
 
