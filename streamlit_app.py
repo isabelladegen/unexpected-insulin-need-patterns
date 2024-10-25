@@ -4,9 +4,18 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
+UNI_BRISTOL_LOGO_WIDE = "images/uni_bristol_logo.png"
+UNI_BRISTOL_ICON = "images/uni_bristol_icon.png"
+
 # Set page config
 st.set_page_config(page_title="Unexpected insulin needs", layout="wide")
 
+# Sidebar
+st.logo(
+        UNI_BRISTOL_LOGO_WIDE,
+        size="large",
+        link="https://www.bristol.ac.uk/cdt/interactive-ai/",
+        icon_image=UNI_BRISTOL_ICON)
 st.sidebar.markdown('''
 # Content	
 :clipboard: [Background](#background)
@@ -22,6 +31,7 @@ st.sidebar.markdown('''
 :mailbox: [Contact us](#contact-us)
 ''', unsafe_allow_html=True)
 
+# Main body
 st.title("Patterns in insulin needs of people with Type 1 Diabetes")
 st.markdown('''
 **Isabella Degen, Kate Robson Brown, Henry W. J. Reeve, Zahraa S. Abdallah**
@@ -30,7 +40,7 @@ An interactive dashboard exploring  patterns in insulin needs, carbohydrate inta
 insulin delivery systems. You can read the full paper on JMIRx Med: http://dx.doi.org/10.2196/44384.
 
 :warning: *This site is under construction and the figures are completely fictional. The text is the abstract from the paper
-that needs updating and shortening for this format. :warning:*
+that needs updating and shortening for this format.* :warning:
 ''')
 
 st.header(':clipboard: Background', anchor='background')
