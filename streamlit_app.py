@@ -8,7 +8,11 @@ UNI_BRISTOL_LOGO_WIDE = "images/uni_bristol_logo.png"
 UNI_BRISTOL_ICON = "images/uni_bristol_icon.png"
 
 # Set page config
-st.set_page_config(page_title="Unexpected insulin needs", layout="wide")
+st.set_page_config(
+    page_title="Unexpected insulin needs",
+    page_icon=UNI_BRISTOL_ICON,
+    layout="wide"
+)
 
 # Sidebar
 st.logo(
