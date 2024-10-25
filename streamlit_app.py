@@ -6,6 +6,7 @@ from plotly.subplots import make_subplots
 
 UNI_BRISTOL_LOGO_WIDE = "images/uni_bristol_logo.png"
 UNI_BRISTOL_ICON = "images/uni_bristol_icon.png"
+QR_CODE = "images/qr_code.png"
 
 # Set page config
 st.set_page_config(
@@ -21,7 +22,7 @@ st.logo(
         link="https://www.bristol.ac.uk/cdt/interactive-ai/",
         icon_image=UNI_BRISTOL_ICON)
 st.sidebar.markdown('''
-# UKRI Center for Doctoral Training in Interactive AI
+### UKRI Center for Doctoral Training in Interactive AI
 # Content	
 :clipboard: [Background](#background)
 
@@ -34,7 +35,15 @@ st.sidebar.markdown('''
 :bulb: [Conclusions](#conclusions)
 
 :mailbox: [Contact us](#contact-us)
+<br>
+<br>
+<br>
+*Scan QR Code to open page on your device:*
 ''', unsafe_allow_html=True)
+
+st.sidebar.image(QR_CODE,
+                 use_column_width=False,
+                 )
 
 # Main body
 st.title("Patterns in insulin needs of people with Type 1 Diabetes")
