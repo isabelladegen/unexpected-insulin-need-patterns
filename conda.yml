@@ -3,18 +3,16 @@ channels:
   - conda-forge
   - maxibor
   - defaults
-  - bioconda # for fitter
 dependencies:
   - python=3.11
-  - streamlit
+  - streamlit>=1.29.0
   - numpy
   - matplotlib
   - seaborn
-  - pandas
+  - pandas>=2.0.0
   - scipy
-  - seaborn
   - pytest
   - pyhamcrest
-  - plotly
+  - plotly>=5.18.0
   - pip
 #  - pip:
