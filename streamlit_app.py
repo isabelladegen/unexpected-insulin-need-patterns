@@ -401,7 +401,7 @@ def display_main_findings():
     with col2:
         st.markdown("""
             <div class="expected-col">
-                <p><strong>Expected Reason</strong></p>
+                <p><strong>Expected Reasons</strong></p>
                 <p>... is needed for more carbs being eaten.</p>
                 <p>... is due to eating more carbs.</p>
                 <p>... needs more insulin.</p>
@@ -411,7 +411,7 @@ def display_main_findings():
     with col3:
         st.markdown("""
             <div class="unexpected-col">
-                <p><strong>Unexpected Reason</strong></p>
+                <p><strong>Unexpected Reasons</strong></p>
                 <p>... is not due more carbs being eaten.</p>
                 <p>... is not due more carbs being eaten.</p>
                 <p>... does not need more insulin.</p>
