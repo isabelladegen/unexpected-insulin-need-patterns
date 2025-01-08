@@ -104,6 +104,8 @@ def main():
 
     # Main body content
     st.title(content_title)
+    st.markdown("*Isabella Degen | Kate Robson Brown | Henry W. J. Reeve | Zahraa S. Abdallah*")
+    st.markdown("[Full paper](https://dx.doi.org/10.2196/44384)")
 
     # Content based on selection
     if page == page_1:
@@ -123,11 +125,11 @@ def main():
 
     # old_page_content()
 
-    # Footer
-    footer = """<div class='footer'>
-    <p><a href="https://dx.doi.org/10.2196/44384)">Full Paper</a> | Isabella Degen | Kate Robson Brown | Henry W. J. Reeve | Zahraa S. Abdallah</p>
-    </div>"""
-    st.markdown(footer, unsafe_allow_html=True)
+    # # Footer
+    # footer = """<div class='footer'>
+    # <p><a href="https://dx.doi.org/10.2196/44384)">Full Paper</a> | Isabella Degen | Kate Robson Brown | Henry W. J. Reeve | Zahraa S. Abdallah</p>
+    # </div>"""
+    # st.markdown(footer, unsafe_allow_html=True)
 
 
 def old_page_content():
