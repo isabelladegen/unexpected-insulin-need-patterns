@@ -1,0 +1,25 @@
+,pattern_number,pattern_type,timeframe,mean
+0,1,Expected,Hours of the day,24
+1,1,Expected,Clusters,9
+2,1,Expected,Days of the week,3
+3,1,Expected,Months of the year,8
+4,1,Unexpected,Hours of the day,26
+5,1,Unexpected,Clusters,13
+6,1,Unexpected,Days of the week,9
+7,1,Unexpected,Months of the year,8
+8,2,Expected,Hours of the day,15
+9,2,Expected,Clusters,8
+10,2,Expected,Days of the week,2
+11,2,Expected,Months of the year,6
+12,2,Unexpected,Hours of the day,23
+13,2,Unexpected,Clusters,16
+14,2,Unexpected,Days of the week,11
+15,2,Unexpected,Months of the year,14
+16,3,Expected,Hours of the day,24
+17,3,Expected,Clusters,9
+18,3,Expected,Days of the week,3
+19,3,Expected,Months of the year,8
+20,3,Unexpected,Hours of the day,20
+21,3,Unexpected,Clusters,6
+22,3,Unexpected,Days of the week,4
+23,3,Unexpected,Months of the year,12
