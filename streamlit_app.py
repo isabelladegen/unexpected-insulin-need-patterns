@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from streamlit.components.v1 import html
 
 UNI_BRISTOL_LOGO_WIDE = "images/uni_bristol_logo.png"
 UNI_BRISTOL_ICON = "images/uni_bristol_icon.png"
@@ -34,6 +35,12 @@ def local_css(file_name):
     st.markdown(css_variables, unsafe_allow_html=True)
     with open(file_name) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+
+def load_custom_js(file_name):
+    with open(file_name, 'r') as file:
+        js_content = file.read()
+        html(f"<script>{js_content}</script>", height=0)
 
 
 # Function to load your data
@@ -76,8 +83,9 @@ def main():
         layout="wide",
     )
 
-    # Load css
+    # Load css and js
     local_css("style/style.css")
+    load_custom_js("scripts/style_metrics.js")
 
     # Sidebar
     st.logo(
@@ -355,6 +363,7 @@ def create_pattern_plot(df, selected_patterns):
     # filter data by selected patterns, 1, 2, 3
     filtered_df = df[df['pattern_number'].isin(selected_patterns)]
     pattern_types = df['pattern_type'].unique().tolist()
+    pattern_types = pattern_types[::-1]  # Reverse to put 'Expected' last which will plot it first
 
     fig = go.Figure()
 
@@ -403,7 +412,7 @@ def create_pattern_plot(df, selected_patterns):
         yaxis=dict(
             title='',
             zeroline=False,
-            showgrid=False
+            showgrid=False,
         ),
         barmode='group',
         margin=dict(l=150, r=20, t=20, b=40),
@@ -421,7 +430,7 @@ def create_pattern_plot(df, selected_patterns):
 
 def display_main_findings():
     # Key Findings section
-    st.subheader("Key Finding: Unexpected Patterns are as common as expected patterns")
+    st.subheader("Unexpected Patterns are as common as expected patterns")
 
     st.caption("Select from patterns 1-3 to see how many people have these patterns:")
 
@@ -454,10 +463,19 @@ def display_main_findings():
             </div>
         """, unsafe_allow_html=True)
 
-    selected_pattern_numbers = [k for k, v in pattern_selections.items() if v]
-
     # Create and display plot
+    selected_pattern_numbers = [k for k, v in pattern_selections.items() if v]
     if selected_pattern_numbers:  # Only show plot if at least one pattern is selected
+        filtered_df = pattern_frequency_df[pattern_frequency_df['pattern_number'].isin(selected_pattern_numbers)]
+        avg_expected = filtered_df[filtered_df['pattern_type'] == 'Expected']['mean'].mean().round(1)
+        avg_unexpected = filtered_df[filtered_df['pattern_type'] == 'Unexpected']['mean'].mean().round(1)
+        # Display key metrics
+        st.write("")  # add space
+        col1, col2, col3 = st.columns(3)
+        col1.metric("People with pattern", "Avg.")
+        col2.metric("Expected Patterns", str(avg_expected))
+        col3.metric("Unexpected Patterns", str(avg_unexpected))
+        # plot
         fig = create_pattern_plot(pattern_frequency_df, selected_pattern_numbers)
         st.plotly_chart(fig, use_container_width=True)
     else:
