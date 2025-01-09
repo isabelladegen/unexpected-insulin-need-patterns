@@ -59,6 +59,8 @@ def load_data():
 
 pattern_frequency_df = pd.read_csv("data/pattern_frequency.csv", index_col=0)
 meal_rise_stats_df = pd.read_csv('data/figure-2a-stats-results.csv', header=[0, 1, 2], index_col=0)
+night_high_1_stats_df = pd.read_csv('data/figure-3a-stats-results.csv', header=[0, 1, 2], index_col=0)
+night_high_2_stats_df = pd.read_csv('data/figure-3b-stats-results.csv', header=[0, 1, 2], index_col=0)
 
 contact_form = """
     <form action="https://formsubmit.co/3d80f75bd493b7edbca0a868b9c6dbe6" method="POST">
@@ -341,31 +343,61 @@ def display_page3():
 
 
 def explore_patterns():
+    patterns = {'night_high_1': "High Glucose during night - Version 1",
+                'night_high_2': "High Glucose during night - Version 2",
+                'post_meal_rise': "Post meal rise"
+                }
     st.subheader("Explore Different Patterns")
 
     # Controls section
     pattern_select = st.selectbox(
         "Select a pattern",
-        ["Night High Glucose", "Post-meal Rise", "Other"]
+        list(patterns.values())
     )
 
     # Split view layout
     col1, col2 = st.columns([0.7, 0.3])
-    with col1:
-        # Create and display the plot
-        fig = plot_cluster_confidence_intervals_for_df(meal_rise_stats_df)
-        st.plotly_chart(fig, use_container_width=True)
-    with col2:
-        st.subheader("Description")
-        # Example pattern details
-        st.markdown("""
-            ### Pattern Description
-            This section shows detailed information about the selected pattern.
+    with col1:  # plot
+        if pattern_select == patterns['night_high_1']:
+            fig = plot_cluster_confidence_intervals_for_df(night_high_1_stats_df)
+            st.plotly_chart(fig, use_container_width=True)
+        if pattern_select == patterns['night_high_2']:
+            fig = plot_cluster_confidence_intervals_for_df(night_high_2_stats_df)
+            st.plotly_chart(fig, use_container_width=True)
+        if pattern_select == patterns['post_meal_rise']:
+            fig = plot_cluster_confidence_intervals_for_df(meal_rise_stats_df)
+            st.plotly_chart(fig, use_container_width=True)
+        st.caption("The graph shows scaled, hourly mean readings and 95% confidence intervals for insulin, "
+                   "carbohydrates and blood glucose seperated into two clusters")
+    with col2:  # description
+        st.write("")
+        st.write("")
+        st.subheader(pattern_select)
+        if pattern_select == patterns['night_high_1']:
+            st.markdown("""
+                            Cluster 2 shows significantly higher blood glucose readings in the early part of the night 
+                            (6 UTC).
 
-            - Type: Unexpected
-            - Frequency: Common
-            - Time of occurrence: Night
-            """)
+                            - Type: Unexpected
+                            - Frequency: Common (11 of 28 people)
+                            - Time of occurrence: Night
+                            """)
+        if pattern_select == patterns['night_high_2']:
+            st.markdown("""
+                        Cluster 2 shows significantly higher blood glucose readings in the the night (8 UTC).
+
+                           - Type: Unexpected
+                           - Frequency: Common (11 of 28 people)
+                           - Time of occurrence: Night
+                           """)
+        if pattern_select == patterns['post_meal_rise']:
+            st.markdown("""
+                Both clusters show blood glucose rising post meals (carbohydrates spikes).
+    
+                - Type: Unexpected
+                - Frequency: Common (17 of 28 people)
+                - Time of occurrence: After meals
+                """)
 
 
 def plot_cluster_confidence_intervals_for_df(df):
