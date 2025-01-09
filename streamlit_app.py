@@ -228,7 +228,7 @@ def display_individual_variations():
     st.markdown("Each person is unique. Insulin requirements vary "
                 "hugely between people and also over time for the same person.")
 
-    st.subheader("Our studies demographics:")
+    st.subheader("Our study's demographics:")
     col4, col5, col6, col7 = st.columns(4)
     col4.metric("Avg. A1C in mmol/mol", 46, delta=68, help="This is a measure that reflects average blood glucose levels. Non "
                                                  "diabetic A1C < 42. The average A1C in the UK is 67-69. NICE"
