@@ -17,6 +17,7 @@ function styleMetrics() {
 
         if (label) {
             const text = label.textContent;
+            // console.log(label.textContent)
             if (text.includes('Expected Patterns')) {
                 // console.log('Applying Expected Patterns styling');
                 metric.style.backgroundColor = expectedColor;
@@ -27,6 +28,11 @@ function styleMetrics() {
                 metric.style.backgroundColor = unexpectedColor;
                 metric.style.padding = '10px';
                 metric.style.borderRadius = '5px';
+            } else {
+                // console.log('Clear styling to avoid previous style cache')
+                metric.style.backgroundColor = '';
+                metric.style.padding = '';
+                metric.style.borderRadius = '';
             }
         } else {
             console.log('No label found for this metric');
