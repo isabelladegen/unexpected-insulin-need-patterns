@@ -121,9 +121,7 @@ def main():
         display_page4()
 
     if page == page_5:
-        display_page5()
-
-    # old_page_content()
+        display_why_this_matters()
 
     # # Footer
     # footer = """<div class='footer'>
@@ -271,8 +269,44 @@ def old_page_content():
     st.markdown(contact_form, unsafe_allow_html=True)
 
 
-def display_page5():
-    st.header("Page 5")
+def display_why_this_matters():
+    st.header("Why this matters")
+    st.subheader("Unexpected patterns are as frequent as expected patterns")
+    st.markdown('''
+    > This shows that factors beyond carbohydrates substantially influence blood glucose regulation.
+    ''')
+    with st.expander("Unexpected patterns explained"):
+        st.markdown('''
+            Unexpected patterns are times when an increase of insulin doesn't lower blood glucose and/or when eating
+            more carbohydrates does not raise blood glucose.
+            
+            The hormone insulin is expected to enable the cells to take up glucose from the blood which should lead to
+            glucose falling. When insulin doesn't lower blood glucose it shows that either more glucose is entering the
+            blood stream than the insulin can cover or that other factors make insulin less effective than usually.
+            
+            Carbohydrates in Type 1 Diabetes lead to glucose raising due to the body not producing the required insulin.
+            When carbohydrates don't raise blood glucose it shows that too much insulin has been injected or that
+            other factors make insulin more effective than usually.    
+        ''')
+
+    st.markdown('''
+    > Currently, automated insulin delivery systems are 'flying blind' to these additional factors.
+    ''')
+    with st.expander("Impact explained"):
+        st.markdown('''
+                    Due to these additional factor not being systematically quantified and considered in insulin dosing
+                    automated insulin delivery systems need to take a cautious approach which can lead to
+                    blood glucose levels going out of the healthy range and even require manual interventions from
+                    the person with diabetes. Manual interventions in automated insulin delivery can cause the 
+                    system to not appropriately asses the situation and can lead to dangerous situations.
+                    Manual interventions can also be difficult for the person to deal with.
+                ''')
+
+    st.subheader(
+        'Insulin requirements vary wildly between individuals and even for the same individual at different times')
+    st.markdown('''
+        > This highlights that dynamic and personalised approaches to dosing insulin are essential.
+        ''')
 
 
 def display_page4():
