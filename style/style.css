@@ -56,6 +56,14 @@
     background-color: var(--unexpected-colour);
 }
 
+.expected-col p:last-child {
+    margin-bottom: 0; /* Removes bottom margin for the last paragraph */
+}
+
+.unexpected-col p:last-child {
+    margin-bottom: 0; /* Removes bottom margin for the last paragraph */
+}
+
 
 /* FOOTER */
 .footer {
