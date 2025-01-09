@@ -347,11 +347,11 @@ def explore_patterns():
                 'night_high_2': "High Glucose during night - Version 2",
                 'post_meal_rise': "Post meal rise"
                 }
-    st.subheader("Explore Different Patterns")
+    st.subheader("Explore Patterns")
 
     # Controls section
     pattern_select = st.selectbox(
-        "Select a pattern",
+        "Select pattern",
         list(patterns.values())
     )
 
@@ -374,30 +374,27 @@ def explore_patterns():
         st.write("")
         st.subheader(pattern_select)
         if pattern_select == patterns['night_high_1']:
-            st.markdown("""
-                            Cluster 2 shows significantly higher blood glucose readings in the early part of the night 
-                            (6 UTC).
+            st.metric("People with night highs", "11 of 28")
+            st.markdown(
+                '<div class="unexpected-pattern">Unexpected Pattern 2: Higher Blood Glucose is not due to more carbs being eaten.</div>',
+                unsafe_allow_html=True)
+            st.markdown("""Cluster 2 shows significantly higher blood glucose readings in the early part of the night 
+                            (6 UTC).""")
 
-                            - Type: Unexpected
-                            - Frequency: Common (11 of 28 people)
-                            - Time of occurrence: Night
-                            """)
         if pattern_select == patterns['night_high_2']:
-            st.markdown("""
-                        Cluster 2 shows significantly higher blood glucose readings in the the night (8 UTC).
+            st.metric("People with night highs", "11 of 28")
+            st.markdown(
+                '<div class="unexpected-pattern">Unexpected Pattern 2: Higher Blood Glucose is not due to more carbs being eaten.</div>',
+                unsafe_allow_html=True)
+            st.markdown("""Cluster 2 shows significantly higher blood glucose readings in the the night (8 UTC).""")
 
-                           - Type: Unexpected
-                           - Frequency: Common (11 of 28 people)
-                           - Time of occurrence: Night
-                           """)
         if pattern_select == patterns['post_meal_rise']:
-            st.markdown("""
-                Both clusters show blood glucose rising post meals (carbohydrates spikes).
-    
-                - Type: Unexpected
-                - Frequency: Common (17 of 28 people)
-                - Time of occurrence: After meals
-                """)
+            st.metric("People with night highs", "17 of 28")
+            st.markdown(
+                '<div class="unexpected-pattern">Unexpected Pattern 2: Higher Blood Glucose is not due to more carbs being eaten.</div>',
+                unsafe_allow_html=True)
+            st.markdown("""Both clusters show blood glucose rising post meals (carbohydrates spikes), see Cluster 1: 14
+            UTC and Cluster 2: 2 UTC""")
 
 
 def plot_cluster_confidence_intervals_for_df(df):

@@ -36,7 +36,6 @@
 .sidebar .block-container {
     padding: 1rem;
 }
-
 /* KEY FINDINGS PATTERN COLS */
 .expected-col, .unexpected-col {
     padding: 12px;
@@ -64,6 +63,20 @@
     margin-bottom: 0; /* Removes bottom margin for the last paragraph */
 }
 
+/* EXPLORE PATTERN STYLING */
+.unexpected-pattern {
+    background-color: var(--unexpected-colour);
+    border-radius: 5px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.expected-pattern {
+    background-color: var(--expected-colour);
+    border-radius: 5px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
 
 /* FOOTER */
 .footer {
