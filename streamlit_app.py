@@ -43,24 +43,12 @@ def load_custom_js(file_name):
         html(f"<script>{js_content}</script>", height=0)
 
 
-# Function to load your data
-@st.cache_data  # This caches the data to improve performance
-def load_data():
-    # Replace this with your actual data loading logic
-    # Example format of what your data might look like:
-    df = pd.DataFrame({
-        'time': pd.date_range(start='2024-01-01', periods=24, freq='h'),
-        'glucose': [140, 145, 150, 160, 165, 170, 165, 160] * 3,
-        'insulin': [2.5, 2.7, 3.0, 3.2, 3.3, 3.4, 3.2, 3.0] * 3,
-        'carbs': [0, 0, 0, 0, 0, 0, 0, 0] * 3
-    })
-    return df
-
-
 pattern_frequency_df = pd.read_csv("data/pattern_frequency.csv", index_col=0)
 meal_rise_stats_df = pd.read_csv('data/figure-2a-stats-results.csv', header=[0, 1, 2], index_col=0)
 night_high_1_stats_df = pd.read_csv('data/figure-3a-stats-results.csv', header=[0, 1, 2], index_col=0)
 night_high_2_stats_df = pd.read_csv('data/figure-3b-stats-results.csv', header=[0, 1, 2], index_col=0)
+flatline_stats_df = pd.read_csv('data/flatline-stats-results.csv', header=[0, 1, 2], index_col=0)
+different_days_stats_df = pd.read_csv('data/different_days-stats-results.csv', header=[0, 1, 2], index_col=0)
 
 contact_form = """
     <form action="https://formsubmit.co/3d80f75bd493b7edbca0a868b9c6dbe6" method="POST">
@@ -116,6 +104,8 @@ def main():
     # Main body content
     st.title(content_title)
     st.markdown("*Isabella Degen | Kate Robson Brown | Henry W. J. Reeve | Zahraa S. Abdallah*")
+    st.markdown("We discovered interesting temporal patterns in the insulin needs of people with Type 1 Diabetes "
+                "that cannot be explained by carbohydrate intake alone.")
     st.markdown("[Full paper](https://dx.doi.org/10.2196/44384)")
 
     # Content based on selection
@@ -129,7 +119,7 @@ def main():
     #     display_page3()
 
     if page == page_4:
-        display_page4()
+        display_individual_variations()
 
     if page == page_5:
         display_why_this_matters()
@@ -139,20 +129,6 @@ def main():
     # <p><a href="https://dx.doi.org/10.2196/44384)">Full Paper</a> | Isabella Degen | Kate Robson Brown | Henry W. J. Reeve | Zahraa S. Abdallah</p>
     # </div>"""
     # st.markdown(footer, unsafe_allow_html=True)
-
-
-def load_pattern_images():
-    """Load and cache pattern images"""
-
-    @st.cache_resource
-    def _load_images():
-        return {
-            "Night High Glucose": Image.open("night_glucose.png"),
-            "Post-meal Rise": Image.open("postmeal.png"),
-            "Other": Image.open("other_pattern.png")
-        }
-
-    return _load_images()
 
 
 def old_page_content():
@@ -166,17 +142,6 @@ def old_page_content():
         insulin delivery (AID) has been shown to maintain blood glucose levels within a narrow range. Beyond clinical 
         outcomes, data from AID systems is little researched and promises new data-driven insights to improve the 
         understanding and treatment of T1D.
-        ''')
-    st.header(':dart: Objective', anchor='objective')
-    st.markdown(
-        '''
-        The aim is to discover unexpected temporal patterns in insulin needs and to analyse how frequently these occur. 
-        Unexpected patterns are situations where increased insulin does not result in lower glucose, or increased 
-        carbohydrate intake does not raise glucose levels. Such situations suggest that factors beyond carbohydrates 
-        influence insulin needs.    
-
-        *TODO: Add visualisation for expected and unexpected patterns*
-
         ''')
     st.header(':microscope: Methods', anchor='methods')
     st.markdown(
@@ -194,95 +159,19 @@ def old_page_content():
         '''
         On average, 13.5 participants had unexpected patterns and 9.9 had expected patterns. 
         The patterns were more pronounced (d>0.94) when comparing hours of the day and similar days than when comparing 
-        days of the week or months (0.3<d<0.52). Notably, 11 participants exhibited a higher IG overnight despite 
+        days of the week or months (0.3<d<0.52). 
+        Notably, 11 participants exhibited a higher IG overnight despite 
         concurrently higher IOB (10 of 11). Additionally, 17 participants experienced an increase in IG after COB 
-        decreased post-meals. The significant associations between pattern frequency and demographics 
+        decreased post-meals. 
+        The significant associations between pattern frequency and demographics 
         were moderate (0.31≤\tau≤0.48). 
         Between clusters, mean IOB (P=.03, d=0.7) and IG (P=.02, d=0.67) differed significantly, 
-        but not COB (P=.08, d=0.55). IOB and IG were most similar (mean distance 5.08, SD 2.25), 
-        while COB and IG were most different (mean distance 11.43, SD 2.6), suggesting that AID attempts to counteract both 
+        but not COB (P=.08, d=0.55). 
+        IOB and IG were most similar (mean distance 5.08, SD 2.25), 
+        while COB and IG were most different (mean distance 11.43, SD 2.6), 
+        suggesting that AID attempts to counteract both 
         observed and unobserved factors that impact IG.
         ''')
-    st.markdown('''
-    :warning: *These graphs are currently fictional. Just to give an idea of how the results could be 
-    presented in an interactive way.*
-    ''')
-    pattern_type = st.selectbox(
-        "Choose pattern to explore:",
-        ["Overnight Patterns", "Post-Meal Patterns", "Daily Clusters"]
-    )
-    # Load the data
-    df = load_data()
-    # Create different visualizations based on pattern type
-    if pattern_type == "Overnight Patterns":
-        st.header("Overnight Glucose Patterns")
-        st.markdown("""
-        ### Key Finding
-        11 participants exhibited higher glucose levels overnight despite higher insulin on board.
-        """)
-
-        # Create subplot with shared x-axis
-        fig = make_subplots(rows=2, cols=1, shared_xaxes=True)
-
-        # Add glucose trace
-        fig.add_trace(
-            go.Scatter(x=df['time'], y=df['glucose'], name="Glucose"),
-            row=1, col=1
-        )
-
-        # Add insulin trace
-        fig.add_trace(
-            go.Scatter(x=df['time'], y=df['insulin'], name="Insulin"),
-            row=2, col=1
-        )
-
-        fig.update_layout(height=600, title_text="Glucose vs Insulin Overnight")
-        st.plotly_chart(fig, use_container_width=True)
-
-    elif pattern_type == "Post-Meal Patterns":
-        st.header("Post-Meal Response Patterns")
-        st.markdown("""
-        ### Key Finding
-        17 participants showed increased glucose levels after carbohydrates decreased post-meals.
-        """)
-
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(x=df['time'], y=df['glucose'], name="Glucose"))
-        fig.add_trace(go.Scatter(x=df['time'], y=df['carbs'], name="Carbs"))
-        fig.update_layout(title="Post-Meal Glucose and Carbohydrate Patterns")
-        st.plotly_chart(fig, use_container_width=True)
-
-    else:  # Daily Clusters
-        st.header("Daily Pattern Clusters")
-        st.markdown("""
-        ### Key Finding
-        Significant differences in insulin on board (P=.03, d=0.7) and glucose (P=.02, d=0.67) 
-        between clusters.
-        """)
-
-        # Add your clustering visualization here
-        # Example: showing different clusters
-        cluster_fig = px.scatter(df, x='insulin', y='glucose',
-                                 title="Clusters of Daily Patterns")
-        st.plotly_chart(cluster_fig, use_container_width=True)
-    # Add statistical insights
-    st.header("Statistical Insights")
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.metric(
-            label="Average Participants with Unexpected Patterns",
-            value="13.5"
-        )
-    with col2:
-        st.metric(
-            label="Effect Size for Hour Patterns",
-            value="d > 0.94"
-        )
-    with col3:
-        st.metric(
-            label="IOB-IG Distance",
-            value="5.08 ± 2.25"
-        )
     st.header(':bulb: Conclusions', anchor='conclusions')
     st.markdown(
         '''Our study shows that unexpected patterns in the insulin needs of people with T1D are as common as expected 
@@ -334,12 +223,24 @@ def display_why_this_matters():
         ''')
 
 
-def display_page4():
-    st.header("Page 4")
+def display_individual_variations():
+    st.header("No one size fits all")
+    st.markdown("Each person is unique despite our relatively homogenous population. Insulin requirements vary"
+                "hugely between people and also over time for the same person.")
 
+    col1, col2 = st.columns(2)
+    with col1:  # plot
+        st.markdown("<p style='text-align: center; font-weight: bold; margin: 0;'>A person with almost flat lines</p>", unsafe_allow_html=True)
+        fig = plot_cluster_confidence_intervals_for_df(flatline_stats_df, fix_y=6)
+        st.plotly_chart(fig, use_container_width=True)
+    with col2:
+        st.markdown("<p style='text-align: center; font-weight: bold; margin: 0;'>A person with more variation between the days</p>",
+                    unsafe_allow_html=True)
+        fig = plot_cluster_confidence_intervals_for_df(different_days_stats_df, fix_y=6)
+        st.plotly_chart(fig, use_container_width=True)
 
-def display_page3():
-    st.header("Page 3")
+    st.caption("The graphs shows daily time series of scaled, hourly mean readings and 95% confidence intervals for "
+               "insulin, carbohydrates and blood glucose seperated into two clusters based on euclidian distance")
 
 
 def explore_patterns():
@@ -397,7 +298,7 @@ def explore_patterns():
             UTC and Cluster 2: 2 UTC""")
 
 
-def plot_cluster_confidence_intervals_for_df(df):
+def plot_cluster_confidence_intervals_for_df(df, fix_y=0):
     # Get counts for each cluster from the data
     df = df.round(2)
     cluster_counts = {
@@ -484,7 +385,11 @@ def plot_cluster_confidence_intervals_for_df(df):
     # Update axes
     for i in [1, 2]:
         title = f"Cluster {i} ({cluster_counts[i - 1]} days)"
-        fig.update_yaxes(title_text=title, row=i, col=1)
+        fig.update_yaxes(
+            title_text=title,
+            range=[0, fix_y] if fix_y > 0 else None,
+            row=i,
+            col=1)
         fig.update_xaxes(
             title_text="Hour of day (UTC)" if i == 2 else None,
             tickmode='array',
