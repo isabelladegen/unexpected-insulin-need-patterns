@@ -64,6 +64,13 @@ contact_form = """
          </button>
     </form>
     """
+# some content
+
+daily_ts_graph_description_text = "The graphs shows daily time series of scaled, hourly mean readings and 95% confidence intervals for " \
+                                  "insulin, carbohydrates and blood glucose seperated into two clusters based on euclidian distance"
+why_do_unexpected_patterns_matter = '''
+ > This shows that factors beyond carbohydrates substantially influence blood glucose regulation.
+ '''
 
 
 def main():
@@ -124,11 +131,20 @@ def main():
     if page == page_5:
         display_why_this_matters()
 
-    # # Footer
-    # footer = """<div class='footer'>
-    # <p><a href="https://dx.doi.org/10.2196/44384)">Full Paper</a> | Isabella Degen | Kate Robson Brown | Henry W. J. Reeve | Zahraa S. Abdallah</p>
-    # </div>"""
-    # st.markdown(footer, unsafe_allow_html=True)
+    with st.expander("Details on method"):
+        st.markdown("""
+        We analysed time series data on insulin on board (IOB), carbohydrates on board (COB) and 
+        interstitial glucose (IG) from 29 participants using the OpenAPS AID system. 
+
+        **Pattern frequency** in hours, days 
+        (grouped via K-means clustering), weekdays, and months were determined by comparing the 95% CI of the mean 
+        differences between temporal units.
+
+        **Associations** between pattern frequency and demographic variables were examined. Significant differences in 
+        IOB, COB and IG for various time categories were assessed using Mann-Whitney U tests. 
+        Effect sizes and Euclidean distances between variables were calculated. Finally, the forecastability of IOB, COB, 
+        and IG for the clustered days was analysed using Granger causality. 
+        """)
 
 
 def old_page_content():
@@ -186,9 +202,7 @@ def old_page_content():
 def display_why_this_matters():
     st.header("Why this matters")
     st.subheader("Unexpected patterns are as frequent as expected patterns")
-    st.markdown('''
-    > This shows that factors beyond carbohydrates substantially influence blood glucose regulation.
-    ''')
+    st.markdown(why_do_unexpected_patterns_matter)
     with st.expander("Unexpected patterns explained"):
         st.markdown('''
             Unexpected patterns are times when an increase of insulin doesn't lower blood glucose and/or when eating
@@ -230,17 +244,19 @@ def display_individual_variations():
 
     st.subheader("Our study's demographics:")
     col4, col5, col6, col7 = st.columns(4)
-    col4.metric("Avg. A1C in mmol/mol", 46, delta=68, help="This is a measure that reflects average blood glucose levels. Non "
-                                                 "diabetic A1C < 42. The average A1C in the UK is 67-69. NICE"
-                                                 " recommends A1C < 48, which 30% of adults in the UK achieve. "
-                                                 "70% of adults in the UK have an A1C > 58, 40% have an A1C > 75.")
+    col4.metric("Avg. A1C in mmol/mol", 46, delta=68,
+                help="This is a measure that reflects average blood glucose levels. Non "
+                     "diabetic A1C < 42. The average A1C in the UK is 67-69. NICE"
+                     " recommends A1C < 48, which 30% of adults in the UK achieve. "
+                     "70% of adults in the UK have an A1C > 58, 40% have an A1C > 75.")
     col5.metric("Using an insulin pump since", 2006, delta=2015,
                 help="Pumps became more widely available on the NHS around 2015/16.")
     col6.metric("Using a CGM since", 2014, delta=2022,
                 help="CGM is a continuous glucose monitor and it became more widely available"
                      " on the NHS in 2022.")
-    col7.metric("Using an AID since", 2017, delta=2022, help="AID is an automated insulin delivery system. Such systems became more"
-                                                 "widely available on the NHS in 2022.")
+    col7.metric("Using an AID since", 2017, delta=2022,
+                help="AID is an automated insulin delivery system. Such systems became more"
+                     "widely available on the NHS in 2022.")
     st.caption("Compared to UK T1D statistics our participants had a lower A1C and are early adopters of "
                "T1D technologies.")
 
@@ -258,8 +274,7 @@ def display_individual_variations():
         fig = plot_cluster_confidence_intervals_for_df(different_days_stats_df, fix_y=6)
         st.plotly_chart(fig, use_container_width=True)
 
-    st.caption("The graphs shows daily time series of scaled, hourly mean readings and 95% confidence intervals for "
-               "insulin, carbohydrates and blood glucose seperated into two clusters based on euclidian distance")
+    st.caption(daily_ts_graph_description_text)
 
 
 def explore_patterns():
@@ -287,8 +302,7 @@ def explore_patterns():
         if pattern_select == patterns['post_meal_rise']:
             fig = plot_cluster_confidence_intervals_for_df(meal_rise_stats_df)
             st.plotly_chart(fig, use_container_width=True)
-        st.caption("The graph shows scaled, hourly mean readings and 95% confidence intervals for insulin, "
-                   "carbohydrates and blood glucose seperated into two clusters")
+        st.caption(daily_ts_graph_description_text)
     with col2:  # description
         st.write("")
         st.write("")
@@ -490,9 +504,9 @@ def create_pattern_plot(df, selected_patterns):
 
 def display_main_findings():
     # Key Findings section
-    st.subheader("Unexpected Patterns are as common as expected patterns")
-
-    st.caption("Select from patterns 1-3 to see how many of the 29 people have expected and unexpected patterns:")
+    st.subheader("Unexpected patterns are as common as expected patterns")
+    st.markdown("We currently do not systematically account for unexpected patterns. Their frequency is a surprise.")
+    st.caption("Select from patterns 1-3 to see how many of the 29 people have these expected and unexpected patterns:")
 
     col1, col2, col3 = st.columns(3)
 
@@ -540,6 +554,102 @@ def display_main_findings():
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.warning("Please select at least one pattern to display.")
+
+    st.divider()
+    # CORRELATION SECTION
+    st.subheader("No pattern is strongly associated with demographic information")
+    st.markdown("**Strong Correlations** (τ > 0.7)")
+    st.markdown("None.")
+    st.markdown("**Weak Correlations** (τ ≤ 0.31)")
+    st.markdown("""
+        - Age
+        - Years with T1D
+        - Amount of daily carbs eaten
+        - Amount of daily basal insulin
+        - Length of CGM and AID use
+        """)
+
+    # Define correlation data
+    correlations = {
+        1: {
+            "expected": {
+                "A1c": {"direction": "↓", "tau": "-0.41"},
+                "Mean Glucose": {"direction": "↓0.", "tau": "-0.38"},
+                "Mean Carbs": {"direction": "↑", "tau": "0.45 "}
+            },
+            "unexpected": {
+                "A1c": {"direction": "↑", "tau": "0.42"},
+                "Mean glucose": {"direction": "↑", "tau": "0.36"}
+            }
+        },
+        2: {
+            "expected": {
+                "A1c": {"direction": "↑", "tau": "0.35"},
+                "Mean glucose": {"direction": "↓", "tau": "0.35"}
+            },
+            "unexpected": {
+                "A1c": {"direction": "↑", "tau": "0.39"},
+                "Yars of pump experience": {"direction": "↓", "tau": "0.33-0.35"}
+            }
+        },
+        3: {
+            "expected": {},  # no significant correlations
+            "unexpected": {}  # no significant correlations
+        }
+    }
+
+    st.markdown("**Medium Correlations** (0.31 < τ ≤ 0.48)",
+                help="Explanations: τ = Kendall's Tau, frequency of pattern ↑ increases/↓ decreases")
+    corr_pattern_selections = {}
+    corr_pattern_selections[1] = st.checkbox(
+        'Pattern 1: More insulin  → more carbs (expected) | → not more carbs (unexpected)', value=True)
+    corr_pattern_selections[2] = st.checkbox(
+        'Pattern 2: Higher blood glucose → more carbs (expected) | → not more carbs (unexpected)', value=True)
+    corr_pattern_selections[3] = st.checkbox(
+        'Pattern 3: Eating more carbs → more insulin (expected) | → not more insulin (unexpected)', value=True)
+
+    # select which medium correlations remain
+    selected_corr_pattern_numbers = [k for k, v in corr_pattern_selections.items() if v]
+    ps_of_expected_patterns = ""
+    ps_of_unexpected_patterns = ""
+
+    for pattern_num in selected_corr_pattern_numbers:
+        if correlations[pattern_num]["expected"]:
+            sub_e_patterns = []
+            for measure, data in correlations[pattern_num]["expected"].items():
+                sub_e_patterns.append(f"{measure} {data['direction']}")
+            if sub_e_patterns:
+                substring_e = ", ".join(sub_e_patterns)
+                ps_of_expected_patterns = ps_of_expected_patterns + f"<p><strong>Pattern {pattern_num}:</strong> {substring_e}</p>"
+            else:
+                ps_of_expected_patterns = "<p>None</p>"
+        if correlations[pattern_num]["unexpected"]:
+            sub_un_patterns = []
+            for measure, data in correlations[pattern_num]["unexpected"].items():
+                sub_un_patterns.append(f"{measure} {data['direction']}")
+            if sub_un_patterns:
+                substring_un = ", ".join(sub_un_patterns)
+                ps_of_unexpected_patterns = ps_of_unexpected_patterns + f"<p><strong>Pattern {pattern_num}:</strong> {substring_un}</p>"
+            else:
+                ps_of_unexpected_patterns = "<p>None</p>"
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown(f"""
+                   <div class="expected-col">
+                       <p><strong>Expected Associations</strong></p>
+                       {ps_of_expected_patterns}
+                   </div>
+               """, unsafe_allow_html=True)
+    with col2:
+        st.markdown(f"""
+                  <div class="unexpected-col">
+                      <p><strong>Unexpected Associations</strong></p>
+                      {ps_of_unexpected_patterns}
+                  </div>
+              """, unsafe_allow_html=True)
+
+    st.caption("Note: Only correlations where τ ≥ 0.36 achieved statistical power ≥80%")
 
 
 if __name__ == "__main__":
