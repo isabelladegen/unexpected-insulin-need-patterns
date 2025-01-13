@@ -78,6 +78,14 @@
     margin: 1rem 0;
 }
 
+/* WHY THIS MATTERS - DOESN'T  WORK WITH KEY*/
+/*.st-key-insight-boxes {*/
+/*    padding: 20px;*/
+/*    border: 1px solid #ccc;*/
+/*    border-radius: 5px;*/
+/*    background-color: #f8f9fa;*/
+/*}*/
+
 /* FOOTER */
 .footer {
     position: fixed;
