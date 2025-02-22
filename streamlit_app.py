@@ -5,6 +5,8 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from streamlit.components.v1 import html
 
+from inividual_variations import display_individual_variations
+from plot_cluster_interval import plot_cluster_confidence_intervals_for_df, daily_ts_graph_description_text
 from why_this_matters import display_why_this_matters
 
 UNI_BRISTOL_LOGO_WIDE = "images/uni_bristol_logo.png"
@@ -49,27 +51,6 @@ pattern_frequency_df = pd.read_csv("data/pattern_frequency.csv", index_col=0)
 meal_rise_stats_df = pd.read_csv('data/figure-2a-stats-results.csv', header=[0, 1, 2], index_col=0)
 night_high_1_stats_df = pd.read_csv('data/figure-3a-stats-results.csv', header=[0, 1, 2], index_col=0)
 night_high_2_stats_df = pd.read_csv('data/figure-3b-stats-results.csv', header=[0, 1, 2], index_col=0)
-flatline_stats_df = pd.read_csv('data/flatline-stats-results.csv', header=[0, 1, 2], index_col=0)
-different_days_stats_df = pd.read_csv('data/different_days-stats-results.csv', header=[0, 1, 2], index_col=0)
-
-contact_form = """
-    <form action="https://formsubmit.co/3d80f75bd493b7edbca0a868b9c6dbe6" method="POST">
-         <input type="hidden" name="_captcha" value="false">
-         <input type="text" name="name" placeholder="Your name" required>
-         <input type="email" name="email" placeholder="Your email" required>
-         <input type="hidden" name="_subject" value="Streamline Contact for insulin need demo app">
-         <input type="hidden" name="_next" value="https://insulin-need-patterns.streamlit.app/?embed=true">
-         <input type="hidden" name="_captcha" value="true">
-         <textarea name="message" placeholder="Your message here"></textarea>
-         <button type="submit" class="sendbutton">
-            <span class="sendbutton__text">Send</span>
-         </button>
-    </form>
-    """
-# some content
-
-daily_ts_graph_description_text = "The graphs shows daily time series of scaled, hourly mean readings and 95% confidence intervals for " \
-                                  "insulin, carbohydrates and blood glucose seperated into two clusters based on euclidian distance"
 
 
 def main():
@@ -146,98 +127,6 @@ def main():
         """)
 
 
-def old_page_content():
-    st.header(':clipboard: Background', anchor='background')
-    st.markdown(
-        '''
-        Type 1 Diabetes (T1D) is a chronic condition in which the body produces too little insulin, a hormone needed to 
-        regulate blood glucose. Various factors such as carbohydrates, exercise and hormones impact insulin needs. Beyond 
-        carbohydrates, most factors remain under-explored. Regulating insulin is a complex control task that can go wrong 
-        and cause blood glucose levels to fall outside a range that protects people from adverse health effects. Automated 
-        insulin delivery (AID) has been shown to maintain blood glucose levels within a narrow range. Beyond clinical 
-        outcomes, data from AID systems is little researched and promises new data-driven insights to improve the 
-        understanding and treatment of T1D.
-        ''')
-    st.header(':microscope: Methods', anchor='methods')
-    st.markdown(
-        '''
-        We analysed time series data on insulin on board (IOB), carbohydrates on board (COB) and interstitial glucose 
-        (IG) from 29 participants using the OpenAPS AID system. Pattern frequency in hours, days 
-        (grouped via K-means clustering), weekdays, and months were determined by comparing the 95% CI of the mean 
-        differences between temporal units. Associations between pattern frequency and demographic variables were examined. 
-        Significant differences in IOB, COB and IG for various time categories were assessed using Mann-Whitney U tests. 
-        Effect sizes and Euclidean distances between variables were calculated. Finally, the forecastability of IOB, COB, 
-        and IG for the clustered days was analysed using Granger causality.
-        ''')
-    st.header(':bar_chart: Results', anchor='results')
-    st.markdown(
-        '''
-        On average, 13.5 participants had unexpected patterns and 9.9 had expected patterns. 
-        The patterns were more pronounced (d>0.94) when comparing hours of the day and similar days than when comparing 
-        days of the week or months (0.3<d<0.52). 
-        Notably, 11 participants exhibited a higher IG overnight despite 
-        concurrently higher IOB (10 of 11). Additionally, 17 participants experienced an increase in IG after COB 
-        decreased post-meals. 
-        The significant associations between pattern frequency and demographics 
-        were moderate (0.31≤\tau≤0.48). 
-        Between clusters, mean IOB (P=.03, d=0.7) and IG (P=.02, d=0.67) differed significantly, 
-        but not COB (P=.08, d=0.55). 
-        IOB and IG were most similar (mean distance 5.08, SD 2.25), 
-        while COB and IG were most different (mean distance 11.43, SD 2.6), 
-        suggesting that AID attempts to counteract both 
-        observed and unobserved factors that impact IG.
-        ''')
-    st.header(':bulb: Conclusions', anchor='conclusions')
-    st.markdown(
-        '''Our study shows that unexpected patterns in the insulin needs of people with T1D are as common as expected 
-        patterns. Unexpected patterns cannot be explained by carbohydrates alone. 
-        Our results highlight the complexity of glucose regulation and emphasise the need for personalised treatment 
-        approaches. Further research is needed to identify and quantify the factors that cause these patterns.''')
-    # Contact us
-    st.header(":mailbox: Contact us", anchor='contact-us')
-    st.markdown(contact_form, unsafe_allow_html=True)
-
-
-def display_individual_variations():
-    st.header("No one size fits all")
-    st.markdown("Each person is unique. Insulin requirements vary "
-                "hugely between people and also over time for the same person.")
-
-    st.subheader("Our study's demographics:")
-    col4, col5, col6, col7 = st.columns(4)
-    col4.metric("Avg. A1C in mmol/mol", 46, delta=68,
-                help="This is a measure that reflects average blood glucose levels. Non "
-                     "diabetic A1C < 42. The average A1C in the UK is 67-69. NICE"
-                     " recommends A1C < 48, which 30% of adults in the UK achieve. "
-                     "70% of adults in the UK have an A1C > 58, 40% have an A1C > 75.")
-    col5.metric("Using an insulin pump since", 2006, delta=2015,
-                help="Pumps became more widely available on the NHS around 2015/16.")
-    col6.metric("Using a CGM since", 2014, delta=2022,
-                help="CGM is a continuous glucose monitor and it became more widely available"
-                     " on the NHS in 2022.")
-    col7.metric("Using an AID since", 2017, delta=2022,
-                help="AID is an automated insulin delivery system. Such systems became more"
-                     "widely available on the NHS in 2022.")
-    st.caption("Compared to UK T1D statistics our participants had a lower A1C and are early adopters of "
-               "T1D technologies.")
-
-    st.subheader("Variation between people:")
-    col1, col2 = st.columns(2)
-    with col1:  # plot
-        st.markdown("<p style='text-align: center; font-weight: bold; margin: 0;'>A person with almost flat lines</p>",
-                    unsafe_allow_html=True)
-        fig = plot_cluster_confidence_intervals_for_df(flatline_stats_df, fix_y=6)
-        st.plotly_chart(fig, use_container_width=True)
-    with col2:
-        st.markdown(
-            "<p style='text-align: center; font-weight: bold; margin: 0;'>A person with more variation between the days</p>",
-            unsafe_allow_html=True)
-        fig = plot_cluster_confidence_intervals_for_df(different_days_stats_df, fix_y=6)
-        st.plotly_chart(fig, use_container_width=True)
-
-    st.caption(daily_ts_graph_description_text)
-
-
 def explore_patterns():
     patterns = {'night_high_1': "High Glucose during night - Version 1",
                 'night_high_2': "High Glucose during night - Version 2",
@@ -290,108 +179,6 @@ def explore_patterns():
                 unsafe_allow_html=True)
             st.markdown("""Both clusters show blood glucose rising post meals (carbohydrates spikes), see Cluster 1: 14
             UTC and Cluster 2: 2 UTC""")
-
-
-def plot_cluster_confidence_intervals_for_df(df, fix_y=0):
-    # Get counts for each cluster from the data
-    df = df.round(2)
-    cluster_counts = {
-        0: df[('0', 'count', 'xtrain iob mean')].iloc[0],
-        1: df[('1', 'count', 'xtrain iob mean')].iloc[0]
-    }
-
-    # Create figure with subplots
-    fig = make_subplots(
-        rows=2, cols=1,
-        vertical_spacing=0.05,
-        shared_xaxes=True,
-    )
-
-    # Colors matching the matplotlib version
-    colors = {
-        'iob': '#1f77b4',
-        'cob': '#ff7f0e',
-        'bg': '#2ca02c'
-    }
-
-    # Names for legend
-    metric_names = {
-        'iob': 'Insulin',
-        'cob': 'Carbohydrates',
-        'bg': 'Blood Glucose'
-    }
-
-    # Plot for each cluster
-    for cluster_idx in [0, 1]:
-        row = cluster_idx + 1
-
-        for metric_key, metric_name in metric_names.items():
-            base_col = f'xtrain {metric_key} mean'
-            color = colors[metric_key]
-
-            # Add confidence interval as a filled area
-            x_data = df.index.tolist()
-            ci_hi = df[(str(cluster_idx), 'ci96_hi', base_col)]
-            ci_lo = df[(str(cluster_idx), 'ci96_lo', base_col)]
-
-            fig.add_trace(
-                go.Scatter(
-                    name=f'{metric_name} CI',
-                    x=x_data + x_data[::-1],
-                    y=ci_hi.tolist() + ci_lo.tolist()[::-1],
-                    fill='toself',
-                    fillcolor=f'rgba{tuple(list(int(color.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4)) + [0.2])}',
-                    line=dict(color='rgba(255,255,255,0)'),
-                    showlegend=False,
-                    hoverinfo='skip',
-                ),
-                row=row, col=1
-            )
-
-            # Add mean line
-            fig.add_trace(
-                go.Scatter(
-                    name=metric_name,
-                    x=x_data,
-                    y=df[(str(cluster_idx), 'mean', base_col)],
-                    mode='lines+markers',
-                    line=dict(color=color, width=2),
-                    marker=dict(size=6),
-                    showlegend=False if cluster_idx == 1 else True,
-                ),
-                row=row, col=1
-            )
-
-    # Update layout
-    fig.update_layout(
-        height=500,
-        showlegend=True,
-        legend=dict(
-            yanchor="top",  # Anchor to bottom of legend box
-            y=1.1,  # Position between the two plots (adjust as needed)
-            xanchor="center",
-            x=0.5,
-            orientation="h"
-        ),
-        hovermode='x unified'
-    )
-
-    # Update axes
-    for i in [1, 2]:
-        title = f"Cluster {i} ({cluster_counts[i - 1]} days)"
-        fig.update_yaxes(
-            title_text=title,
-            range=[0, fix_y] if fix_y > 0 else None,
-            row=i,
-            col=1)
-        fig.update_xaxes(
-            title_text="Hour of day (UTC)" if i == 2 else None,
-            tickmode='array',
-            tickvals=list(range(0, 24, 2)),
-            row=i, col=1
-        )
-
-    return fig
 
 
 def create_pattern_plot(df, selected_patterns):
