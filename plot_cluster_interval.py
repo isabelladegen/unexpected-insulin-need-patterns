@@ -2,7 +2,7 @@ from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
 daily_ts_graph_description_text = "The graphs shows daily time series of scaled, hourly mean readings and 95% confidence intervals for " \
-                                  "insulin, carbohydrates and blood glucose seperated into two clusters based on euclidian distance"
+                                  "insulin, carbohydrates and blood glucose seperated into two clusters based on euclidian distance."
 
 
 def plot_cluster_confidence_intervals_for_df(df, fix_y=0):

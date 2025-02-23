@@ -1,12 +1,14 @@
 import streamlit as st
 
+from constants import why_this_matters
+
 why_do_unexpected_patterns_matter = '''
  > This shows that factors beyond carbohydrates substantially influence blood glucose regulation.
  '''
 
 
 def display_why_this_matters():
-    st.header("Why this matters")
+    st.header(why_this_matters)
 
     col1, col2, col3 = st.columns(3)
     with col1:

@@ -1,8 +1,9 @@
 import streamlit as st
 from streamlit.components.v1 import html
 
-from constants import expected_colour, unexpected_colour, key_findings
-from explore_patterns import explore_patterns
+from constants import expected_colour, unexpected_colour, key_findings, explore_patterns, individual_variations, \
+    why_this_matters
+from explore_patterns import display_explore_patterns
 from inividual_variations import display_individual_variations
 from key_findings import display_main_findings
 from why_this_matters import display_why_this_matters
@@ -65,10 +66,10 @@ def main():
     st.sidebar.title(content_title)
 
     page_1 = key_findings
-    page_2 = "🔍 Explore Patterns"
+    page_2 = explore_patterns
     # page_3 = ":clock1: Time of Day Analysis"
-    page_4 = "👤 Individual Variations"
-    page_5 = "🎯 Why This Matters"
+    page_4 = individual_variations
+    page_5 = why_this_matters
     page = st.sidebar.radio(
         "Select...",
         [page_1, page_2, page_4, page_5]
@@ -78,14 +79,14 @@ def main():
     st.title(content_title)
     st.caption("*Isabella Degen | Kate Robson Brown | Henry W. J. Reeve | Zahraa S. Abdallah*")
     with st.container(border=False, key='main-callout'):
-        st.markdown("AI as a research tool to improve our understanding of complex biological systems")
+        st.markdown("AI as a research tool to improve our understanding of complex biological systems.")
 
     # Content based on selection
     if page == page_1:
         display_main_findings()
 
     if page == page_2:
-        explore_patterns()
+        display_explore_patterns()
 
     if page == page_4:
         display_individual_variations()
