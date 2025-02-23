@@ -1,8 +1,7 @@
 import streamlit as st
 from streamlit.components.v1 import html
 
-from constants import expected_colour, unexpected_colour, key_findings, explore_patterns, individual_variations, \
-    why_this_matters
+from constants import expected_colour, unexpected_colour, key_findings, explore_patterns, individual_variations, why_this_matters
 from explore_patterns import display_explore_patterns
 from inividual_variations import display_individual_variations
 from key_findings import display_main_findings
