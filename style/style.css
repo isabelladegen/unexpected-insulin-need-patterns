@@ -81,9 +81,23 @@
 
 .st-key-main-callout {
     background-color: #fefbe7;
-    padding: 20px;
+    padding: 15px;
     border-radius: 10px;
     text-align: center;
+    width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+
+@media (max-width: 768px) {
+    .st-key-main-callout p {
+        max-width: 85%;
+        padding: 0 10px;
+    }
 }
 
 /* WHY THIS MATTERS - DOESN'T  WORK WITH KEY*/
