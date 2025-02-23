@@ -59,7 +59,7 @@ def main():
     st.logo(
         UNI_BRISTOL_LOGO_WIDE,
         size="large",
-        link="https://www.bristol.ac.uk/cdt/interactive-ai/",
+        link=None,
         icon_image=UNI_BRISTOL_ICON)
 
     st.sidebar.title(content_title)
@@ -73,10 +73,6 @@ def main():
         "Explore...",
         [page_1, page_2, page_4, page_5]
     )
-
-    # old sidebar
-    # st.sidebar.markdown('''
-    # ### UKRI Center for Doctoral Training in Interactive AI
 
     # Main body content
     st.title(content_title)
