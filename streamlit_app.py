@@ -95,7 +95,20 @@ def main():
 
     st.divider()
 
-    with st.expander("Details on method"):
+    st.subheader("Additional Information")
+    st.markdown("[Read full paper](https://dx.doi.org/10.2196/44384)")
+    with st.expander("See who made this research possible"):
+        st.markdown("""
+                    We would like to thank UK Research and Innovation (UKRI), which is funding author ID's PhD research through the UKRI Doctoral Training in Interactive Artificial Intelligence (AI) under grant EP/S022937/1. 
+                    
+                    We are grateful to everyone involved in the Interactive AI Centre for Doctoral Training at Bristol University for their support and guidance.
+                     
+                    We would like to thank Dana Lewis and the entire OpenAPS community, who have tirelessly worked on the open-source automated insulin delivery systems. We would also like to thank the OpenHumans platform for providing the mechanism to donate data, as well as the people with diabetes who have donated their data to research that formed the basis for this study. 
+                    
+                    We used the generative AI tool Claude Sonnet 3.5 by Anthropic to help with summarising our research content for this demo.
+                    """)
+
+    with st.expander("How we analysed the data"):
         st.markdown("""
         We analysed time series data on insulin on board (IOB), carbohydrates on board (COB) and 
         interstitial glucose (IG) from 29 participants using the OpenAPS AID system. 
@@ -110,9 +123,7 @@ def main():
         and IG for the clustered days was analysed using Granger causality. 
         """)
 
-    st.markdown("[Full paper](https://dx.doi.org/10.2196/44384)")
-
-    with st.expander("Unexpected patterns explained"):
+    with st.expander("What makes a pattern unexpected?"):
         st.markdown('''
                 Unexpected patterns are times when an increase of insulin doesn't lower blood glucose and/or when eating
                 more carbohydrates does not raise blood glucose.

@@ -11,7 +11,7 @@ def display_why_this_matters():
     st.header(why_this_matters)
     st.caption("Our findings have implications for different stakeholders.")
 
-    st.subheader("For Health Care Professional", divider=True)
+    st.subheader("For Health Care Professionals", divider=True)
     with st.expander("Explore implications for your practice"):
         st.markdown("""
                     #### Treatment diversity
