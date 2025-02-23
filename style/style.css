@@ -36,15 +36,16 @@
 .sidebar .block-container {
     padding: 1rem;
 }
+
 /* KEY FINDINGS PATTERN COLS */
 .expected-col, .unexpected-col {
-    padding: 12px;
+    padding: 8px;
     border-radius: 5px;
 }
 
 .pattern-header {
-    padding-top: 12px;
-    padding-bottom: 4px;
+    padding-top: 5px;
+    padding-bottom: 1px;
 }
 
 .expected-col {
@@ -76,6 +77,13 @@
     border-radius: 5px;
     padding: 1rem;
     margin: 1rem 0;
+}
+
+.st-key-main-callout {
+    background-color: #fefbe7;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
 }
 
 /* WHY THIS MATTERS - DOESN'T  WORK WITH KEY*/

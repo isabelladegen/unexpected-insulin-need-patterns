@@ -1,7 +1,7 @@
 import streamlit as st
 from streamlit.components.v1 import html
 
-from constants import expected_colour, unexpected_colour
+from constants import expected_colour, unexpected_colour, key_findings
 from explore_patterns import explore_patterns
 from inividual_variations import display_individual_variations
 from key_findings import display_main_findings
@@ -64,22 +64,21 @@ def main():
 
     st.sidebar.title(content_title)
 
-    page_1 = "📊 Key Findings"
+    page_1 = key_findings
     page_2 = "🔍 Explore Patterns"
     # page_3 = ":clock1: Time of Day Analysis"
     page_4 = "👤 Individual Variations"
     page_5 = "🎯 Why This Matters"
     page = st.sidebar.radio(
-        "Explore...",
+        "Select...",
         [page_1, page_2, page_4, page_5]
     )
 
     # Main body content
     st.title(content_title)
-    st.markdown("*Isabella Degen | Kate Robson Brown | Henry W. J. Reeve | Zahraa S. Abdallah*")
-    st.markdown("We discovered interesting temporal patterns in the insulin needs of people with Type 1 Diabetes "
-                "that cannot be explained by carbohydrate intake alone.")
-    st.markdown("[Full paper](https://dx.doi.org/10.2196/44384)")
+    st.caption("*Isabella Degen | Kate Robson Brown | Henry W. J. Reeve | Zahraa S. Abdallah*")
+    with st.container(border=False, key='main-callout'):
+        st.markdown("AI as a research tool to improve our understanding of complex biological systems")
 
     # Content based on selection
     if page == page_1:
@@ -93,6 +92,8 @@ def main():
 
     if page == page_5:
         display_why_this_matters()
+
+    st.divider()
 
     with st.expander("Details on method"):
         st.markdown("""
@@ -108,6 +109,8 @@ def main():
         Effect sizes and Euclidean distances between variables were calculated. Finally, the forecastability of IOB, COB, 
         and IG for the clustered days was analysed using Granger causality. 
         """)
+
+    st.markdown("[Full paper](https://dx.doi.org/10.2196/44384)")
 
 
 if __name__ == "__main__":
