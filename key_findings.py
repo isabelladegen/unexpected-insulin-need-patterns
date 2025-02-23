@@ -78,19 +78,23 @@ def create_pattern_plot(df, selected_patterns):
 
 def display_main_findings():
     st.header(key_findings)
-    st.write("**1. Discovery of unexpected temporal patterns in insulin needs**")
-    st.caption("Current models cannot fully explain observed insulin needs, highlighting the need for further research into underlying causes.")
+    st.subheader("1. Discovery of unexpected temporal patterns in insulin needs", divider=True)
+    st.caption(
+        "Current models cannot fully explain observed insulin needs, highlighting the need for further research into underlying causes.")
 
-    st.write("**2. Unexpected patterns are as common as expected patterns**")
-    st.caption("These patterns occur as frequently as expected ones, suggesting they are a fundamental part of glucose regulation.")
+    st.subheader("2. Unexpected patterns are as common as expected patterns", divider=True)
+    st.caption(
+        "These patterns occur as frequently as expected ones, suggesting they are a fundamental part of glucose regulation.")
     display_exploration_pattern_frequency()
 
-    st.write("**3. The frequency of these patterns is not strongly associated with demographics**")
+    st.subheader("3. The frequency of these patterns is not strongly associated with demographics", divider=True)
     st.caption("The patterns cannot be explained by demographics, emphasizing the need for personalised approaches.")
     display_explore_correlations()
 
-    st.write("**4. Glucose levels cannot be consistently predicted from insulin and carbohydrate information alone**")
-    st.caption("Granger causality varied between people and situations. Indicates better understanding of factors causing unexpected patterns is required for reliable prediction of blood glucose.")
+    st.subheader("4. Glucose levels cannot be consistently predicted from insulin and carbohydrate information alone",
+                 divider=True)
+    st.caption(
+        "Granger causality varied between people and situations. Indicates better understanding of factors causing unexpected patterns is required for reliable prediction of blood glucose.")
 
 
 def display_explore_correlations():

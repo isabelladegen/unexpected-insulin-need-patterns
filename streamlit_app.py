@@ -112,6 +112,20 @@ def main():
 
     st.markdown("[Full paper](https://dx.doi.org/10.2196/44384)")
 
+    with st.expander("Unexpected patterns explained"):
+        st.markdown('''
+                Unexpected patterns are times when an increase of insulin doesn't lower blood glucose and/or when eating
+                more carbohydrates does not raise blood glucose.
+
+                The hormone insulin is expected to enable the cells to take up glucose from the blood which should lead to
+                glucose falling. When insulin doesn't lower blood glucose it shows that either more glucose is entering the
+                blood stream than the insulin can cover or that other factors make insulin less effective than usually.
+
+                Carbohydrates in Type 1 Diabetes lead to glucose raising due to the body not producing the required insulin.
+                When carbohydrates don't raise blood glucose it shows that too much insulin has been injected or that
+                other factors make insulin more effective than usually.    
+            ''')
+
 
 if __name__ == "__main__":
     main()
