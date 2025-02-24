@@ -2,7 +2,8 @@ import pandas as pd
 import streamlit as st
 
 from constants import explore_patterns
-from plot_cluster_interval import plot_cluster_confidence_intervals_for_df, daily_ts_graph_description_text
+from plot_cluster_interval import plot_cluster_confidence_intervals_for_df, daily_ts_graph_description_text, \
+    select_chart_type
 
 meal_rise_stats_df = pd.read_csv('data/figure-2a-stats-results.csv', header=[0, 1, 2], index_col=0)
 night_high_1_stats_df = pd.read_csv('data/figure-3a-stats-results.csv', header=[0, 1, 2], index_col=0)
@@ -51,14 +52,15 @@ def display_explore_patterns():
             st.markdown("""Both clusters show blood glucose rising post meals (carbohydrates spikes), see Cluster 1: 14
                UTC and Cluster 2: 2 UTC""")
     with col2:  # plot
+        # Select chart type
+        graph_layout = select_chart_type()
         if pattern_select == patterns['night_high_1']:
-            fig = plot_cluster_confidence_intervals_for_df(night_high_1_stats_df)
+            fig = plot_cluster_confidence_intervals_for_df(night_high_1_stats_df, fix_y=7, plot_type=graph_layout)
             st.plotly_chart(fig, use_container_width=True)
         if pattern_select == patterns['night_high_2']:
-            fig = plot_cluster_confidence_intervals_for_df(night_high_2_stats_df)
+            fig = plot_cluster_confidence_intervals_for_df(night_high_2_stats_df, fix_y=7, plot_type=graph_layout)
             st.plotly_chart(fig, use_container_width=True)
         if pattern_select == patterns['post_meal_rise']:
-            fig = plot_cluster_confidence_intervals_for_df(meal_rise_stats_df)
+            fig = plot_cluster_confidence_intervals_for_df(meal_rise_stats_df, fix_y=6, plot_type=graph_layout)
             st.plotly_chart(fig, use_container_width=True)
         st.caption(daily_ts_graph_description_text)
-

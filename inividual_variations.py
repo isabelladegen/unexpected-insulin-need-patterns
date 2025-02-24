@@ -2,7 +2,8 @@ import pandas as pd
 import streamlit as st
 
 from constants import individual_variations
-from plot_cluster_interval import plot_cluster_confidence_intervals_for_df, daily_ts_graph_description_text
+from plot_cluster_interval import plot_cluster_confidence_intervals_for_df, daily_ts_graph_description_text, \
+    select_chart_type
 
 flatline_stats_df = pd.read_csv('data/flatline-stats-results.csv', header=[0, 1, 2], index_col=0)
 different_days_stats_df = pd.read_csv('data/different_days-stats-results.csv', header=[0, 1, 2], index_col=0)
@@ -35,17 +36,18 @@ def display_individual_variations():
     st.subheader("Variation between people")
     st.write(
         "Even within a demographically similar group, we found substantial individual variations in glucose regulation patterns.")
+    graph_layout = select_chart_type()
     col1, col2 = st.columns(2)
     with col1:  # plot
         st.markdown("<p style='text-align: center; font-weight: bold; margin: 0;'>A person with almost flat lines</p>",
                     unsafe_allow_html=True)
-        fig = plot_cluster_confidence_intervals_for_df(flatline_stats_df, fix_y=6)
+        fig = plot_cluster_confidence_intervals_for_df(flatline_stats_df, fix_y=6, plot_type=graph_layout)
         st.plotly_chart(fig, use_container_width=True)
     with col2:
         st.markdown(
             "<p style='text-align: center; font-weight: bold; margin: 0;'>A person with more variation between the days</p>",
             unsafe_allow_html=True)
-        fig = plot_cluster_confidence_intervals_for_df(different_days_stats_df, fix_y=6)
+        fig = plot_cluster_confidence_intervals_for_df(different_days_stats_df, fix_y=6, plot_type=graph_layout)
         st.plotly_chart(fig, use_container_width=True)
 
     st.caption(daily_ts_graph_description_text)

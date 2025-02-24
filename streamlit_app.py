@@ -71,7 +71,8 @@ def main():
     page_5 = why_this_matters
     page = st.sidebar.radio(
         "Select...",
-        [page_1, page_2, page_4, page_5]
+        [page_1, page_2, page_4, page_5],
+        key='sidebar-radio'
     )
 
     # Main body content
