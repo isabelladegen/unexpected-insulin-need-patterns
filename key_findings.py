@@ -14,9 +14,9 @@ temporal_units = {
 }
 # key = display name, value = dataframe pattern number
 selectable_patterns = {
-    'Pattern 1: More **insulin**...': 1,
-    'Pattern 2: Higher **blood glucose**...': 2,
-    'Pattern 3: Eating more **carbs**...': 3
+    ':one:   More **insulin** :syringe:...': 1,
+    ':two:   Higher **blood glucose** :drop_of_blood: ...': 2,
+    ':three:   Eating more **carbs** :green_apple:...': 3
 }
 
 
@@ -204,7 +204,7 @@ def display_explore_correlations():
 def display_exploration_pattern_frequency():
     with st.expander("Explore Pattern Frequency"):
         st.caption(
-            "Select between patterns 1-3 to see how many of the 29 people had which expected and unexpected pattern:")
+            "Select from patterns 1-3 to see how many of the 29 people had which expected pattern (patterns with known reasons) and unexpected patterns (patterns with unknown reasons):")
 
         col1, col2, col3 = st.columns(3)
 
@@ -222,7 +222,7 @@ def display_exploration_pattern_frequency():
         with col2:
             st.markdown("""
                 <div class="expected-col">
-                    <p><strong>Known Factor</strong></p>
+                    <p><strong>Expected → known reasons</strong></p>
                     <p>... is needed for more <strong>carbs</strong>.</p>
                     <p>... is due to more <strong>carbs</strong>.</p>
                     <p>... needs more <strong>insulin</strong>.</p>
@@ -232,7 +232,7 @@ def display_exploration_pattern_frequency():
         with col3:
             st.markdown("""
                 <div class="unexpected-col">
-                    <p><strong>Unexpected - Unknown Factor(s)</strong></p>
+                    <p><strong>Unexpected → unknown reasons</strong></p>
                     <p>... is not due more carbs.</p>
                     <p>... is not due more carbs.</p>
                     <p>... does not need more insulin.</p>
