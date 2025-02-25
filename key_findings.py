@@ -101,7 +101,7 @@ def display_main_findings():
     display_exploration_pattern_frequency()
 
     st.subheader("3. Unexpected patterns are not associated with demographics", divider=True)
-    st.caption("The patterns cannot be explained by demographics, emphasizing the need for personalised approaches.")
+    st.caption("The patterns cannot be explained by demographics, emphasising the need for personalised approaches.")
     display_explore_correlations()
 
     st.subheader("4. Glucose cannot easily be predicted from insulin or carbs",
