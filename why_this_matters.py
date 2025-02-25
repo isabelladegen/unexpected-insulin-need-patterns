@@ -2,17 +2,13 @@ import streamlit as st
 
 from constants import why_this_matters
 
-why_do_unexpected_patterns_matter = '''
- > This shows that factors beyond carbohydrates substantially influence blood glucose regulation.
- '''
-
-
 def display_why_this_matters():
     st.header(why_this_matters)
-    st.caption("Our findings have implications for different stakeholders.")
+    st.caption("Our findings have implications for various areas.")
 
-    st.subheader("For Health Care Professionals", divider=True)
-    with st.expander("Explore implications for your practice"):
+    st.subheader("For Health Care", divider=True)
+    st.markdown("Recognise why individualised approaches and patient partnerships are essential for successful T1D management.")
+    with st.expander("Explore implications for health care"):
         st.markdown("""
                     #### Treatment diversity
                     - Individual variations exist even among people with excellent glucose control
@@ -21,18 +17,41 @@ def display_why_this_matters():
                     """)
         st.markdown(""" 
                     #### Patient Partnership
-                    - Do not label patients as "non-compliant" - acknowledge that many factors affecting blood glucose remain unknown and understudied  
-                    - Recognise that blood glucose variations often occur despite best efforts
-                    - Understand that unexplained patterns may reflect unknown physiological factors rather than management decisions
+                    - Patients that appear "non-compliant" are likely affected by unknown and understudied factors affecting their blood glucose, this label is not helpful 
+                    - Blood glucose variations often occur despite best efforts
+                    - Unexplained patterns may reflect unknown physiological factors rather than management decisions
                     """)
         st.markdown(""" 
                     #### Care Guidelines
-                    - Prioritise personalised treatment approaches
-                    - Develop strategies for managing unexpected patterns
-                    - Work together with the patient to explore solutions while accepting current limitations in understanding
+                    - Personalised treatment approaches need to become a priority
+                    - Strategies for managing unexpected patterns need to be developed
+                    - Collaboration with people with T1D is required to explore solutions while accepting current limitations in understanding
+                    """)
+    st.subheader("For Policy & Regulation", divider=True)
+    st.markdown("Understand why current T1D management approaches are failing to meet targets for the majority of people with T1D.")
+    with st.expander("Explore policy implications and opportunities"):
+        st.markdown(""" 
+                    #### Evidence-Based Policy
+                    - Current approaches result in 70% of UK adults with T1D having A1C levels >58 mmol/mol
+                    - Only 30% achieve the NICE-recommended target of A1C <48 mmol/mol
+                    - Standard guidelines fail to address the reality of unexpected glucose patterns that our research shows are common, not anomalies
+                    - Research funding priorities need reassessment given these findings
+                    """)
+        st.markdown(""" 
+                    #### System Change Opportunities
+                    - Recognition that unexplained glucose variations are common and not the failure of people with T1D
+                    - Investment in personalised approaches and technologies that account for individual variability
+                    - Redefining success metrics beyond simplistic targets that don't reflect the complexity revealed by our research
+                    """)
+        st.markdown("""
+                    #### Regulatory Implications
+                    - Current approval processes for diabetes technologies may not adequately account for individual variability
+                    - Glucose prediction models need to acknowledge limitations given our finding that relationships between insulin, carbohydrates and glucose vary widely
+                    - Standards for diabetes management tools should reflect the reality of unexpected patterns
                     """)
 
-    st.subheader("For AI Researchers", divider=True)
+    st.subheader("For AI Research", divider=True)
+    st.markdown("Understand challenges and opportunities for developing AI methods that can reveal unknown relationships in complex biological systems.")
     with st.expander("Discover research opportunities"):
         st.markdown("""
                     #### Research Approach
@@ -60,7 +79,8 @@ def display_why_this_matters():
                     - Create frameworks for validating unsupervised findings in high-stakes healthcare domains where ground truth may be unknown
                     """)
 
-    st.subheader("For T1D Researchers", divider=True)
+    st.subheader("For T1D Research", divider=True)
+    st.markdown("Explore important research questions and methodological considerations arising directly from our findings.")
     with st.expander("Explore research directions"):
         st.markdown(""" 
                     #### New Research Questions
@@ -77,10 +97,12 @@ def display_why_this_matters():
                     """)
 
     st.subheader("For People with T1D", divider=True)
+    st.markdown("See how this research may validate what you have known or suspected for a long time.")
     with st.expander("See how this research validates your experience"):
         st.markdown(""" 
                     #### Validation
                     - Scientific evidence confirms unexpected patterns are common
+                    - Having more unexpected patterns leads to higher A1C
                     """)
         st.markdown(""" 
                     #### Understanding Variability
@@ -93,6 +115,3 @@ def display_why_this_matters():
                     - Your experiences are supported by research but remain understudied
                     - Use these findings to advocate for personalised care
                     """)
-
-
-
