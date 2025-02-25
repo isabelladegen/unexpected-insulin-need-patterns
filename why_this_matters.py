@@ -26,6 +26,7 @@ def display_why_this_matters():
                     - Personalised treatment approaches need to become a priority
                     - Strategies for managing unexpected patterns need to be developed
                     - Collaboration with people with T1D is required to explore solutions while accepting current limitations in understanding
+                    - Healthcare systems must provide adequate training, time, and resources for HCPs to implement these approaches
                     """)
     st.subheader("For Policy & Regulation", divider=True)
     st.markdown("Understand why current T1D management approaches are failing to meet targets for the majority of people with T1D.")
