@@ -79,7 +79,7 @@ def main():
     st.title(content_title)
     st.caption("*Isabella Degen | Kate Robson Brown | Henry W. J. Reeve | Zahraa S. Abdallah*")
     with st.container(border=False, key='main-callout'):
-        st.markdown("AI as a research tool to improve our understanding of complex biological systems.")
+        st.markdown("""##### AI as a research tool to improve our understanding of complex biological systems.""")
 
     # Content based on selection
     if page == page_1:
