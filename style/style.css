@@ -22,11 +22,13 @@
 
 /* Style pattern select radios  */
 /* Target only the visible radio option containers */
+.st-key-pattern-correlation-select-patterns div[role="radiogroup"] > label[data-baseweb="radio"],
 .st-key-pattern-frequency-select-patterns div[role="radiogroup"] > label[data-baseweb="radio"] {
     margin-bottom: 15px;
 }
 
 /* Remove extra margin from the last radio option */
+.st-key-pattern-correlation-select-patterns div[role="radiogroup"] > label[data-baseweb="radio"]:last-child,
 .st-key-pattern-frequency-select-patterns div[role="radiogroup"] > label[data-baseweb="radio"]:last-child {
     margin-bottom: 0;
 }
@@ -81,18 +83,20 @@
 }
 
 /* EXPLORE PATTERN STYLING */
+.st-key-unexpected_patterns_associations,
 .unexpected-pattern {
     background-color: var(--unexpected-colour);
     border-radius: 5px;
     padding: 1rem;
-    margin: 1rem 0;
+    margin: 0.5rem 0;
 }
 
+.st-key-expected_patterns_associations,
 .expected-pattern {
     background-color: var(--expected-colour);
     border-radius: 5px;
     padding: 1rem;
-    margin: 1rem 0;
+    margin: 0.5rem 0;
 }
 
 .st-key-main-callout {

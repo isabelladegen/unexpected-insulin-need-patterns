@@ -4,6 +4,21 @@ import plotly.graph_objects as go
 
 from constants import expected_colour, unexpected_colour, key_findings
 
+format_with_arrow = lambda number: f"{'↑' if number > 0 else '↓' if number < 0 else ''} {abs(number):.2f} τ"
+
+pattern_associations_df = pd.read_csv("data/demographic_associations.csv")
+# key = display name, value = dataframe column names
+demographic_factors = {
+    "Age": "Age",
+    "Duration of T1D": "Duration of T1D",
+    "A1C": "A1C",
+    "Avg. Carbs": "Avg. Carbs",
+    "Avg. Insulin": "Avg. Insulin",
+    "Avg. Basal Insulin": "Avg. Basal Insulin",
+    "Pumping since": "Pumping since",
+    "CGM since": "CGM since",
+    "AID since": "AID since"
+}
 pattern_frequency_df = pd.read_csv("data/pattern_frequency.csv", index_col=0)
 # key = display name, value = dataframe timeframe
 temporal_units = {
@@ -17,6 +32,18 @@ selectable_patterns = {
     ':one:   More **insulin** :syringe:...': 1,
     ':two:   Higher **blood glucose** :drop_of_blood: ...': 2,
     ':three:   Eating more **carbs** :green_apple:...': 3
+}
+
+expected_reasons = {
+    ':one:   More **insulin** :syringe:...': " was needed for more **carbs**.",
+    ':two:   Higher **blood glucose** :drop_of_blood: ...': " was due to more **carbs**.",
+    ':three:   Eating more **carbs** :green_apple:...': " needed more **insulin**."
+}
+
+unexpected_reasons = {
+    ':one:   More **insulin** :syringe:...': " was not due to more carbs.",
+    ':two:   Higher **blood glucose** :drop_of_blood: ...': " was not due to more carbs.",
+    ':three:   Eating more **carbs** :green_apple:...': " did not need more insulin."
 }
 
 
@@ -97,149 +124,105 @@ def display_main_findings():
     display_exploration_pattern_frequency()
 
     st.subheader("3. Unexpected patterns are not associated with demographics", divider=True)
-    st.markdown("Unexpected patterns appear across all demographic groups with no strong associations to demographics, emphasising the need for personalised rather than group-based approaches.")
+    st.markdown(
+        "Unexpected patterns appear across all demographic groups with no strong associations to demographics, emphasising the need for personalised rather than group-based approaches.")
     display_explore_correlations()
 
     st.subheader("4. Glucose cannot easily be predicted from insulin or carbs",
                  divider=True)
-    st.markdown("The causal relationship between insulin, carbohydrates and glucose levels varies widely between individuals and situations. This variability makes reliable glucose prediction difficult without information about what drives these unexpected patterns, highlighting the need to include more causal factors.")
+    st.markdown(
+        "The causal relationship between insulin, carbohydrates and glucose levels varies widely between individuals and situations. This variability makes reliable glucose prediction difficult without information about what drives these unexpected patterns, highlighting the need to include more causal factors.")
 
 
 def display_explore_correlations():
-    with st.expander("Explore associations between patterns and demographic information"):
-        st.markdown("**Strong Correlations** (τ > 0.7)")
-        st.markdown("None.")
-        st.markdown("**Weak Correlations** (τ ≤ 0.31)")
-        st.markdown("""
-            - Age
-            - Years with T1D
-            - Amount of daily carbs eaten
-            - Amount of daily basal insulin
-            - Length of CGM and AID use
-            """)
+    with st.expander("Explore associations between patterns and demographics"):
+        st.caption(
+            "Select from patterns 1-3 to see associations for the selected pattern:")
+        selected_pattern = pattern_selector(key="pattern-correlation-select-patterns")
+        temporal_unit = st.radio(
+            "Select temporal unit:",
+            list(temporal_units.keys()),
+            index=0,
+            horizontal=True,
+            key="select_correlation_temporal_unit",
+            label_visibility="visible"
+        )
+        selectable_pattern_keys = list(demographic_factors.keys())
+        demographics = st.multiselect(
+            "Select demographics:",
+            selectable_pattern_keys,
+            [selectable_pattern_keys[0], selectable_pattern_keys[1], selectable_pattern_keys[2],
+             selectable_pattern_keys[6], selectable_pattern_keys[7], selectable_pattern_keys[8]]
+        )
+        taus = st.slider("Change association strength τ:", 0.0, 1.0, (0.31, 0.7))
+        lower_tau = taus[0]
+        upper_tau = taus[1]
 
-        # Define correlation data
-        correlations = {
-            1: {
-                "expected": {
-                    "A1c": {"direction": "↓", "tau": "-0.41"},
-                    "Mean Glucose": {"direction": "↓0.", "tau": "-0.38"},
-                    "Mean Carbs": {"direction": "↑", "tau": "0.45 "}
-                },
-                "unexpected": {
-                    "A1c": {"direction": "↑", "tau": "0.42"},
-                    "Mean glucose": {"direction": "↑", "tau": "0.36"}
-                }
-            },
-            2: {
-                "expected": {
-                    "A1c": {"direction": "↑", "tau": "0.35"},
-                    "Mean glucose": {"direction": "↓", "tau": "0.35"}
-                },
-                "unexpected": {
-                    "A1c": {"direction": "↑", "tau": "0.39"},
-                    "Yars of pump experience": {"direction": "↓", "tau": "0.33-0.35"}
-                }
-            },
-            3: {
-                "expected": {},  # no significant correlations
-                "unexpected": {}  # no significant correlations
-            }
-        }
+        filtered_assoc_df = pattern_associations_df[
+            pattern_associations_df['pattern_number'] == selectable_patterns[selected_pattern]]
+        filtered_assoc_df = filtered_assoc_df[filtered_assoc_df['timeframe'] == temporal_units[temporal_unit]]
+        # this is only 1 row left and per expected and unexpected
+        expected_df = filtered_assoc_df[filtered_assoc_df['pattern_type'] == 'Expected'][demographics]
+        expected_demographics = [col for col in demographics
+                                 if (abs(expected_df[col].values[0]) >= lower_tau) and
+                                 (abs(expected_df[col].values[0]) <= upper_tau)]
+        expected_df = expected_df[expected_demographics]
 
-        st.markdown("**Medium Correlations** (0.31 < τ ≤ 0.48)",
-                    help="Explanations: τ = Kendall's Tau, frequency of pattern ↑ increases/↓ decreases")
-        corr_pattern_selections = {}
-        corr_pattern_selections[1] = st.checkbox(
-            'Pattern 1: More insulin  → more carbs (expected) | → not more carbs (unexpected)', value=True)
-        corr_pattern_selections[2] = st.checkbox(
-            'Pattern 2: Higher blood glucose → more carbs (expected) | → not more carbs (unexpected)', value=True)
-        corr_pattern_selections[3] = st.checkbox(
-            'Pattern 3: Eating more carbs → more insulin (expected) | → not more insulin (unexpected)', value=True)
+        unexpected_df = filtered_assoc_df[filtered_assoc_df['pattern_type'] == 'Unexpected'][demographics]
+        unexpected_demographics = [col for col in demographics
+                                   if (abs(unexpected_df[col].values[0]) >= lower_tau) and
+                                   (abs(unexpected_df[col].values[0]) <= upper_tau)]
+        unexpected_df = unexpected_df[unexpected_demographics]
 
-        # select which medium correlations remain
-        selected_corr_pattern_numbers = [k for k, v in corr_pattern_selections.items() if v]
-        ps_of_expected_patterns = ""
-        ps_of_unexpected_patterns = ""
+        # Expected
+        with st.container(key="expected_patterns_associations"):
+            st.markdown("Associations for **expected pattern**: " + display_expected_reason(selected_pattern), help="↑ higher demographic values lead to **more frequent** patterns; ↓ higher demographic value lead to **less frequent** patterns")
+            if not expected_demographics:
+                st.caption("No associated demographics")
+            else:
+                cols = create_cols_for_associations(expected_demographics)
+                for i, dem in enumerate(expected_demographics):
+                    with cols[i]:
+                        st.metric(label=demographic_factors[dem], value=format_with_arrow(expected_df[dem].iloc[0]))
 
-        for pattern_num in selected_corr_pattern_numbers:
-            if correlations[pattern_num]["expected"]:
-                sub_e_patterns = []
-                for measure, data in correlations[pattern_num]["expected"].items():
-                    sub_e_patterns.append(f"{measure} {data['direction']}")
-                if sub_e_patterns:
-                    substring_e = ", ".join(sub_e_patterns)
-                    ps_of_expected_patterns = ps_of_expected_patterns + f"<p><strong>Pattern {pattern_num}:</strong> {substring_e}</p>"
-                else:
-                    ps_of_expected_patterns = "<p>None</p>"
-            if correlations[pattern_num]["unexpected"]:
-                sub_un_patterns = []
-                for measure, data in correlations[pattern_num]["unexpected"].items():
-                    sub_un_patterns.append(f"{measure} {data['direction']}")
-                if sub_un_patterns:
-                    substring_un = ", ".join(sub_un_patterns)
-                    ps_of_unexpected_patterns = ps_of_unexpected_patterns + f"<p><strong>Pattern {pattern_num}:</strong> {substring_un}</p>"
-                else:
-                    ps_of_unexpected_patterns = "<p>None</p>"
+        # Unexpected
+        with st.container(key="unexpected_patterns_associations"):
+            st.markdown("Associations for **unexpected pattern**: " + display_unexpected_reason(selected_pattern), help="↑ higher demographic values lead to **more frequent** patterns; ↓ higher demographic value lead to **less frequent** patterns")
+            if not unexpected_demographics:
+                st.caption("No associated demographics")
+            else:
+                cols = create_cols_for_associations(unexpected_demographics)
+                for i, dem in enumerate(unexpected_demographics):
+                    with cols[i]:
+                        st.metric(label=demographic_factors[dem], value=format_with_arrow(unexpected_df[dem].iloc[0]))
 
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown(f"""
-                       <div class="expected-col">
-                           <p><strong>Expected Associations</strong></p>
-                           {ps_of_expected_patterns}
-                       </div>
-                   """, unsafe_allow_html=True)
-        with col2:
-            st.markdown(f"""
-                      <div class="unexpected-col">
-                          <p><strong>Unexpected Associations</strong></p>
-                          {ps_of_unexpected_patterns}
-                      </div>
-                  """, unsafe_allow_html=True)
+        st.caption("Note: Only associations where τ ≥ 0.36 achieved statistical power ≥80%")
 
-        st.caption("Note: Only correlations where τ ≥ 0.36 achieved statistical power ≥80%")
+
+def display_expected_reason(selected_pattern):
+    reason = expected_reasons[selected_pattern]
+    result = selected_pattern.replace("...", "")
+    return result + reason
+
+
+def display_unexpected_reason(selected_pattern):
+    reason = unexpected_reasons[selected_pattern]
+    result = selected_pattern.replace("...", "")
+    return result + reason
+
+
+def create_cols_for_associations(selected_factors):
+    n_factors = len(selected_factors)
+    col_width = max(1, min(25, int(100 / n_factors + 1)))
+    cols = st.columns([col_width] * n_factors)
+    return cols
 
 
 def display_exploration_pattern_frequency():
     with st.expander("Explore Pattern Frequency"):
         st.caption(
             "Select from patterns 1-3 to see how many of the 29 people had which expected pattern (patterns with known reasons) and unexpected patterns (patterns with unknown reasons):")
-
-        col1, col2, col3 = st.columns(3)
-
-        with col1:
-            st.markdown('<p class="pattern-header"><strong>Select Pattern</strong></p>', unsafe_allow_html=True)
-            selected_pattern = st.radio(
-                "Select Pattern:",
-                list(selectable_patterns.keys()),
-                index=0,
-                key="pattern-frequency-select-patterns",
-                horizontal=False,
-                label_visibility="collapsed"  # Hides label but keeps it for accessibility
-            )
-
-        with col2:
-            st.markdown("""
-                <div class="expected-col">
-                    <p><strong>Expected → known reasons</strong></p>
-                    <p>... was needed for more <strong>carbs</strong>.</p>
-                    <p>... was due to more <strong>carbs</strong>.</p>
-                    <p>... needed more <strong>insulin</strong>.</p>
-                </div>
-            """, unsafe_allow_html=True)
-
-        with col3:
-            st.markdown("""
-                <div class="unexpected-col">
-                    <p><strong>Unexpected → unknown reasons</strong></p>
-                    <p>... was not due more carbs.</p>
-                    <p>... was not due more carbs.</p>
-                    <p>... did not need more insulin.</p>
-                </div>
-            """, unsafe_allow_html=True)
-
-
+        selected_pattern = pattern_selector(key="pattern-frequency-select-patterns")
         show_graph = st.toggle("Show as graph")
 
         if show_graph:
@@ -271,3 +254,36 @@ def display_exploration_pattern_frequency():
             col1.metric("Total People", "29")
             col2.metric("People with Expected Patterns", str(avg_expected))
             col3.metric("People with Unexpected Patterns", str(avg_unexpected))
+
+
+def pattern_selector(key=""):
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown('<p class="pattern-header"><strong>Select Pattern</strong></p>', unsafe_allow_html=True)
+        selected_pattern = st.radio(
+            "Select Pattern:",
+            list(selectable_patterns.keys()),
+            index=0,
+            key=key,
+            horizontal=False,
+            label_visibility="collapsed"  # Hides label but keeps it for accessibility
+        )
+    with col2:
+        st.markdown("""
+                <div class="expected-col">
+                    <p><strong>Expected → known reasons</strong></p>
+                    <p>... was needed for more <strong>carbs</strong>.</p>
+                    <p>... was due to more <strong>carbs</strong>.</p>
+                    <p>... needed more <strong>insulin</strong>.</p>
+                </div>
+            """, unsafe_allow_html=True)
+    with col3:
+        st.markdown("""
+                <div class="unexpected-col">
+                    <p><strong>Unexpected → unknown reasons</strong></p>
+                    <p>... was not due to more carbs.</p>
+                    <p>... was not due to more carbs.</p>
+                    <p>... did not need more insulin.</p>
+                </div>
+            """, unsafe_allow_html=True)
+    return selected_pattern
