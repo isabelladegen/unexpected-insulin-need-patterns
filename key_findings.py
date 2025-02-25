@@ -5,6 +5,19 @@ import plotly.graph_objects as go
 from constants import expected_colour, unexpected_colour, key_findings
 
 pattern_frequency_df = pd.read_csv("data/pattern_frequency.csv", index_col=0)
+# key = display name, value = dataframe timeframe
+temporal_units = {
+    "Hours of the day": "Hours of the day",
+    "Same hour across days": "Clusters",
+    "Days of the week": "Days of the week",
+    "Months of the year": "Months of the year",
+}
+# key = display name, value = dataframe pattern number
+selectable_patterns = {
+    'Pattern 1: More **insulin**...': 1,
+    'Pattern 2: Higher **blood glucose**...': 2,
+    'Pattern 3: Eating more **carbs**...': 3
+}
 
 
 def create_pattern_plot(df, selected_patterns):
@@ -51,7 +64,7 @@ def create_pattern_plot(df, selected_patterns):
 
     # Update layout
     fig.update_layout(
-        xaxis_title='Average number of people (total n=29)',
+        xaxis_title='Number of people (total n=29)',
         xaxis=dict(
             range=[0, 30],
             zeroline=True,
@@ -78,20 +91,20 @@ def create_pattern_plot(df, selected_patterns):
 
 def display_main_findings():
     st.header(key_findings)
-    st.subheader("1. Discovery of unexpected temporal patterns in insulin needs", divider=True)
+    st.subheader("1. Discovered unexpected temporal patterns in insulin needs", divider=True)
     st.caption(
         "Current models cannot fully explain observed insulin needs, highlighting the need for further research into underlying causes.")
 
-    st.subheader("2. Unexpected patterns are as common as expected patterns", divider=True)
+    st.subheader("2. Unexpected patterns are common", divider=True)
     st.caption(
-        "These patterns occur as frequently as expected ones, suggesting they are a fundamental part of glucose regulation.")
+        "Unexpected patterns occur as frequently as expected ones, suggesting they are a fundamental part of glucose regulation.")
     display_exploration_pattern_frequency()
 
-    st.subheader("3. The frequency of these patterns is not strongly associated with demographics", divider=True)
+    st.subheader("3. Unexpected patterns are not associated with demographics", divider=True)
     st.caption("The patterns cannot be explained by demographics, emphasizing the need for personalised approaches.")
     display_explore_correlations()
 
-    st.subheader("4. Glucose levels cannot be consistently predicted from insulin and carbohydrate information alone",
+    st.subheader("4. Glucose cannot easily be predicted from insulin or carbs",
                  divider=True)
     st.caption(
         "Granger causality varied between people and situations. Indicates better understanding of factors causing unexpected patterns is required for reliable prediction of blood glucose.")
@@ -196,51 +209,63 @@ def display_explore_correlations():
 def display_exploration_pattern_frequency():
     with st.expander("Explore Pattern Frequency"):
         st.caption(
-            "Select from patterns 1-3 to see how many of the 29 people have these expected and unexpected patterns:")
+            "Select between patterns 1-3 to see how many of the 29 people had which expected and unexpected pattern:")
 
         col1, col2, col3 = st.columns(3)
 
-        pattern_selections = {}
         with col1:
-            st.markdown('<p class="pattern-header"><strong>Patterns</strong></p>', unsafe_allow_html=True)
-            pattern_selections[1] = st.checkbox('Pattern 1: More insulin...', value=True)
-            pattern_selections[2] = st.checkbox('Pattern 2: Higher blood glucose...', value=False)
-            pattern_selections[3] = st.checkbox('Pattern 3: Eating more carbs...', value=False)
+            st.markdown('<p class="pattern-header"><strong>Select Pattern</strong></p>', unsafe_allow_html=True)
+            selected_pattern = st.radio(
+                "Select Pattern:",
+                list(selectable_patterns.keys()),
+                index=0,
+                key="pattern-frequency-select-patterns",
+                horizontal=False,
+                label_visibility="collapsed"  # Hides label but keeps it for accessibility
+            )
 
         with col2:
             st.markdown("""
                 <div class="expected-col">
-                    <p><strong>Expected</strong></p>
-                    <p>... is needed for more carbs.</p>
-                    <p>... is due to more carbs.</p>
-                    <p>... needs more insulin.</p>
+                    <p><strong>Known Factor</strong></p>
+                    <p>... is needed for more <strong>carbs</strong>.</p>
+                    <p>... is due to more <strong>carbs</strong>.</p>
+                    <p>... needs more <strong>insulin</strong>.</p>
                 </div>
             """, unsafe_allow_html=True)
 
         with col3:
             st.markdown("""
                 <div class="unexpected-col">
-                    <p><strong>Unexpected</strong></p>
+                    <p><strong>Unexpected - Unknown Factor(s)</strong></p>
                     <p>... is not due more carbs.</p>
                     <p>... is not due more carbs.</p>
                     <p>... does not need more insulin.</p>
                 </div>
             """, unsafe_allow_html=True)
 
-        # Create and display plot
-        selected_pattern_numbers = [k for k, v in pattern_selections.items() if v]
-        if selected_pattern_numbers:  # Only show plot if at least one pattern is selected
-            filtered_df = pattern_frequency_df[pattern_frequency_df['pattern_number'].isin(selected_pattern_numbers)]
-            avg_expected = filtered_df[filtered_df['pattern_type'] == 'Expected']['mean'].mean().round(1)
-            avg_unexpected = filtered_df[filtered_df['pattern_type'] == 'Unexpected']['mean'].mean().round(1)
-            # Display key metrics
-            st.write("")  # add space
-            col1, col2, col3 = st.columns(3)
-            col1.metric("People with pattern", "Avg.")
-            col2.metric("Expected Patterns", str(avg_expected))
-            col3.metric("Unexpected Patterns", str(avg_unexpected))
-            # plot
-            fig = create_pattern_plot(pattern_frequency_df, selected_pattern_numbers)
-            st.plotly_chart(fig, use_container_width=True)
-        else:
-            st.warning("Please select at least one pattern to display.")
+        # Calculate number of people with pattern
+        temporal_unit = st.radio(
+            "Compare across:",
+            list(temporal_units.keys()),
+            index=0,
+            horizontal=True,
+            label_visibility="visible"  # Hides the empty label completely
+        )
+        filtered_df = pattern_frequency_df[
+            pattern_frequency_df['pattern_number'] == selectable_patterns[selected_pattern]]
+        filtered_df = filtered_df[filtered_df['timeframe'] == temporal_units[temporal_unit]]
+        avg_expected = filtered_df[filtered_df['pattern_type'] == 'Expected']['mean'].iloc[0]
+        avg_unexpected = filtered_df[filtered_df['pattern_type'] == 'Unexpected']['mean'].iloc[0]
+
+        # Display key metrics
+        st.write("")  # add space
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Total People", "29")
+        col2.metric("People with Expected Patterns", str(avg_expected))
+        col3.metric("People with Unexpected Patterns", str(avg_unexpected))
+        # plot
+        # fig = create_pattern_plot(pattern_frequency_df, selected_pattern_numbers, temporal_unit)
+        # st.plotly_chart(fig, use_container_width=True)
+        # else:
+        #     st.warning("Please select at least one pattern to display.")

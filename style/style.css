@@ -20,6 +20,17 @@
     margin: 0.5rem 0;
 }
 
+/* Style pattern select radios  */
+/* Target only the visible radio option containers */
+.st-key-pattern-frequency-select-patterns div[role="radiogroup"] > label[data-baseweb="radio"] {
+    margin-bottom: 15px;
+}
+
+/* Remove extra margin from the last radio option */
+.st-key-pattern-frequency-select-patterns div[role="radiogroup"] > label[data-baseweb="radio"]:last-child {
+    margin-bottom: 0;
+}
+
 /* Selected state */
 .st-key-sidebar-radio label[data-checked=true] {
     background: #f0f0f0;
@@ -49,8 +60,8 @@
 }
 
 .pattern-header {
-    padding-top: 5px;
-    padding-bottom: 1px;
+    padding-top: 10px;
+    padding-bottom: 0px;
 }
 
 .expected-col {
@@ -104,14 +115,6 @@
         padding: 0 10px;
     }
 }
-
-/* WHY THIS MATTERS - DOESN'T  WORK WITH KEY*/
-/*.st-key-insight-boxes {*/
-/*    padding: 20px;*/
-/*    border: 1px solid #ccc;*/
-/*    border-radius: 5px;*/
-/*    background-color: #f8f9fa;*/
-/*}*/
 
 /* FOOTER */
 .footer {

@@ -14,7 +14,7 @@ function styleMetrics() {
     Array.from(parentMetrics).forEach((metric, index) => {
         // Find the label text
         const label = metric.querySelector('[data-testid="stMarkdownContainer"] p');
-
+        // Metric styling
         if (label) {
             const text = label.textContent;
             // console.log(label.textContent)
@@ -28,7 +28,12 @@ function styleMetrics() {
                 metric.style.backgroundColor = unexpectedColor;
                 metric.style.padding = '10px';
                 metric.style.borderRadius = '5px';
-            } else {
+            } else if (text.includes('Total People')) {
+                // console.log('Applying Unexpected Patterns styling');
+                metric.style.padding = '10px';
+                metric.style.borderRadius = '5px';
+            }
+            else {
                 // console.log('Clear styling to avoid previous style cache')
                 metric.style.backgroundColor = '';
                 metric.style.padding = '';

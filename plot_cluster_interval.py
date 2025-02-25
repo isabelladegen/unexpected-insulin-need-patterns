@@ -13,7 +13,7 @@ def select_chart_type():
                    unsafe_allow_html=True)
     with col_radio:
         graph_layout = st.radio(
-            "Select visualisation type",  # Empty label since we're using the write statement above
+            "Select visualisation type",
             ["Cluster-based", "Variate-based"],
             index=0,
             horizontal=True,
