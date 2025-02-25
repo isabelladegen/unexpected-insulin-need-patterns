@@ -81,6 +81,7 @@ def main():
     with st.container(border=False, key='main-callout'):
         st.markdown("""##### AI as a research tool to improve our understanding of complex biological systems.""")
 
+
     # Content based on selection
     if page == page_1:
         display_main_findings()
@@ -97,7 +98,7 @@ def main():
     st.divider()
 
     st.subheader("Additional Information")
-    st.markdown("[Read full paper](https://dx.doi.org/10.2196/44384)")
+    st.page_link("https://dx.doi.org/10.2196/44384", label="Read full paper", icon="📖")
     with st.expander("See who made this research possible"):
         st.markdown("""
                     We would like to thank UK Research and Innovation (UKRI), which is funding author ID's PhD research through the UKRI Doctoral Training in Interactive Artificial Intelligence (AI) under grant EP/S022937/1. 
