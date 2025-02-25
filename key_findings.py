@@ -44,7 +44,7 @@ def create_pattern_plot(df, selected_patterns):
             pattern_data.groupby('timeframe').agg({'mean': ['mean', 'std']}).round(2).reindex(order).reset_index())
 
         fig.add_trace(go.Bar(
-            name=f'{pattern_type} Pattern(s): ' + ', '.join([str(x) for x in selected_patterns]),
+            name=f'{pattern_type} Pattern: ' + ', '.join([str(x) for x in selected_patterns]),
             y=grouped_data['timeframe'],
             x=grouped_data['mean']['mean'],
             error_x=dict(
@@ -55,11 +55,7 @@ def create_pattern_plot(df, selected_patterns):
             ),
             orientation='h',
             marker_color=colors[pattern_type],
-            hovertemplate=(
-                    '%{fullData.name}<br>' +
-                    'Average: %{x:.1f} ± %{error_x.array:.1f} people<br>' +
-                    'Timeframe: %{y}<extra></extra>'
-            )
+            hovertemplate=('%{x:.1f} people')
         ))
 
     # Update layout
@@ -244,28 +240,35 @@ def display_exploration_pattern_frequency():
                 </div>
             """, unsafe_allow_html=True)
 
-        # Calculate number of people with pattern
-        temporal_unit = st.radio(
-            "Compare across:",
-            list(temporal_units.keys()),
-            index=0,
-            horizontal=True,
-            label_visibility="visible"  # Hides the empty label completely
-        )
-        filtered_df = pattern_frequency_df[
-            pattern_frequency_df['pattern_number'] == selectable_patterns[selected_pattern]]
-        filtered_df = filtered_df[filtered_df['timeframe'] == temporal_units[temporal_unit]]
-        avg_expected = filtered_df[filtered_df['pattern_type'] == 'Expected']['mean'].iloc[0]
-        avg_unexpected = filtered_df[filtered_df['pattern_type'] == 'Unexpected']['mean'].iloc[0]
 
-        # Display key metrics
-        st.write("")  # add space
-        col1, col2, col3 = st.columns(3)
-        col1.metric("Total People", "29")
-        col2.metric("People with Expected Patterns", str(avg_expected))
-        col3.metric("People with Unexpected Patterns", str(avg_unexpected))
-        # plot
-        # fig = create_pattern_plot(pattern_frequency_df, selected_pattern_numbers, temporal_unit)
-        # st.plotly_chart(fig, use_container_width=True)
-        # else:
-        #     st.warning("Please select at least one pattern to display.")
+        show_graph = st.toggle("Show as graph")
+
+        if show_graph:
+            # plot
+            fig = create_pattern_plot(pattern_frequency_df, [selectable_patterns[selected_pattern]])
+            st.plotly_chart(fig, use_container_width=True)
+            # else:
+            #     st.warning("Please select at least one pattern to display.")
+        else:
+            # Show numbers
+            # Calculate number of people with pattern
+            temporal_unit = st.radio(
+                "Compare across:",
+                list(temporal_units.keys()),
+                index=0,
+                horizontal=True,
+                label_visibility="visible"  # Hides the empty label completely
+            )
+
+            filtered_df = pattern_frequency_df[
+                pattern_frequency_df['pattern_number'] == selectable_patterns[selected_pattern]]
+            filtered_df = filtered_df[filtered_df['timeframe'] == temporal_units[temporal_unit]]
+            avg_expected = filtered_df[filtered_df['pattern_type'] == 'Expected']['mean'].iloc[0]
+            avg_unexpected = filtered_df[filtered_df['pattern_type'] == 'Unexpected']['mean'].iloc[0]
+
+            # Display key metrics
+            st.write("")  # add space
+            col1, col2, col3 = st.columns(3)
+            col1.metric("Total People", "29")
+            col2.metric("People with Expected Patterns", str(avg_expected))
+            col3.metric("People with Unexpected Patterns", str(avg_unexpected))
