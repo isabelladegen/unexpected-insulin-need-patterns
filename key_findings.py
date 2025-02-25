@@ -89,21 +89,20 @@ def display_main_findings():
     st.header(key_findings)
     st.subheader("1. Discovered unexpected temporal patterns in insulin needs", divider=True)
     st.markdown(
-        "Current models cannot fully explain observed insulin needs, highlighting the need for further research into underlying causes.")
+        "Current models cannot fully explain the observed unexpected patterns, highlighting the need for further research into underlying physiological mechanisms.")
 
     st.subheader("2. Unexpected patterns are common", divider=True)
     st.markdown(
-        "Unexpected patterns occur as frequently as expected ones, suggesting they are a fundamental part of glucose regulation.")
+        "Unexpected patterns occur just as frequently as expected ones, suggesting they are a fundamental part of glucose regulation, not anomalies. This challenges conventional glucose regulation models.")
     display_exploration_pattern_frequency()
 
     st.subheader("3. Unexpected patterns are not associated with demographics", divider=True)
-    st.markdown("The patterns cannot be explained by demographics, emphasising the need for personalised approaches.")
+    st.markdown("Unexpected patterns appear across all demographic groups with no strong associations to demographics, emphasising the need for personalised rather than group-based approaches.")
     display_explore_correlations()
 
     st.subheader("4. Glucose cannot easily be predicted from insulin or carbs",
                  divider=True)
-    st.markdown(
-        "Granger causality varied between people and situations. Indicates better understanding of factors causing unexpected patterns is required for reliable prediction of blood glucose.")
+    st.markdown("The causal relationship between insulin, carbohydrates and glucose levels varies widely between individuals and situations. This variability makes reliable glucose prediction difficult without information about what drives these unexpected patterns, highlighting the need to include more causal factors.")
 
 
 def display_explore_correlations():
