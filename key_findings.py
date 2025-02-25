@@ -223,9 +223,9 @@ def display_exploration_pattern_frequency():
             st.markdown("""
                 <div class="expected-col">
                     <p><strong>Expected → known reasons</strong></p>
-                    <p>... is needed for more <strong>carbs</strong>.</p>
-                    <p>... is due to more <strong>carbs</strong>.</p>
-                    <p>... needs more <strong>insulin</strong>.</p>
+                    <p>... was needed for more <strong>carbs</strong>.</p>
+                    <p>... was due to more <strong>carbs</strong>.</p>
+                    <p>... needed more <strong>insulin</strong>.</p>
                 </div>
             """, unsafe_allow_html=True)
 
@@ -233,9 +233,9 @@ def display_exploration_pattern_frequency():
             st.markdown("""
                 <div class="unexpected-col">
                     <p><strong>Unexpected → unknown reasons</strong></p>
-                    <p>... is not due more carbs.</p>
-                    <p>... is not due more carbs.</p>
-                    <p>... does not need more insulin.</p>
+                    <p>... was not due more carbs.</p>
+                    <p>... was not due more carbs.</p>
+                    <p>... did not need more insulin.</p>
                 </div>
             """, unsafe_allow_html=True)
 
