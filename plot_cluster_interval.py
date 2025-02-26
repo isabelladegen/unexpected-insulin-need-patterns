@@ -2,11 +2,13 @@ from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import streamlit as st
 
+from constants import variate_colours, cluster_colours
+
 daily_ts_graph_description_text = "The graphs shows daily time series of scaled, hourly mean readings and 95% confidence intervals for " \
                                   "insulin, carbohydrates and blood glucose seperated into two clusters based on euclidian distance."
 
 
-def select_chart_type(key:str):
+def select_chart_type(key: str):
     col_head, col_radio = st.columns([2, 3])  # Adjust the ratio as needed
     with col_head:
         st.caption('<div style="text-align: center; padding-top: 10px;">Select visualisation type:</div>',
@@ -45,11 +47,7 @@ def display_clusters_separately(df, fix_y):
         shared_xaxes=True,
     )
     # Colors matching the matplotlib version
-    colors = {
-        'iob': '#1f77b4',
-        'cob': '#ff7f0e',
-        'bg': '#2ca02c'
-    }
+    colors = variate_colours
     # Names for legend
     metric_names = {
         'iob': 'Insulin',
@@ -112,8 +110,10 @@ def display_clusters_separately(df, fix_y):
     # Update axes
     for i in [1, 2]:
         title = f"Cluster {i} ({cluster_counts[i - 1]} days)"
+        title_color = cluster_colours[i-1]
         fig.update_yaxes(
             title_text=title,
+            title_font=dict(color=title_color),
             range=[0, fix_y] if fix_y > 0 else None,
             row=i,
             col=1)
@@ -134,10 +134,7 @@ def display_variates_separately(df, fix_y):
         shared_xaxes=True,
     )
     # Colors matching the matplotlib version
-    colors = {
-        0: '#75CBD8',
-        1: '#B8B943',
-    }
+    colors = cluster_colours
     # Names for legend
     cluster_names = {
         0: 'Cluster 1',
@@ -203,10 +200,11 @@ def display_variates_separately(df, fix_y):
         hovermode='x unified'
     )
     # Update axes
-    for i, metric_name in enumerate(metric_names.values(), 1):
-        title = f"{metric_name}"
+    for i, (metric_key, metric_name) in enumerate(metric_names.items(), 1):
+        title_color = variate_colours[metric_key]
         fig.update_yaxes(
-            title_text=title,
+            title_text=metric_name,
+            title_font=dict(color=title_color),
             range=[0, fix_y] if fix_y > 0 else None,
             row=i,
             col=1)
