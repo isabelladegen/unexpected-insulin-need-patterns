@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 
 from plot_cluster_interval import plot_cluster_confidence_intervals_for_df, daily_ts_graph_description_text, \
-    select_chart_type
+    select_chart_type, colored_text
 
 meal_rise_stats_df = pd.read_csv('data/figure-2a-stats-results.csv', header=[0, 1, 2], index_col=0)
 night_high_1_stats_df = pd.read_csv('data/figure-3a-stats-results.csv', header=[0, 1, 2], index_col=0)
@@ -14,6 +14,10 @@ def display_explore_patterns():
                 'night_high_2': "High Glucose during night - Version 2",
                 'post_meal_rise': "Post meal rise"
                 }
+    highlighted_patterns = {patterns['night_high_1']: f"High {colored_text('Glucose', 'bg')} during night - Version 1",
+                            patterns['night_high_2']: f"High {colored_text('Glucose', 'bg')} during night - Version 2",
+                            patterns['post_meal_rise']: f"Post {colored_text('meal', 'cob')} rise"
+                            }
     # st.header(explore_patterns)
 
     # Controls section
@@ -27,29 +31,30 @@ def display_explore_patterns():
     with col1:  # description
         st.write("")
         st.write("")
-        st.subheader(pattern_select)
+        # subheader
+        st.markdown(f"""### {highlighted_patterns[pattern_select]}""", unsafe_allow_html=True)
         if pattern_select == patterns['night_high_1']:
             st.metric("People with night highs", "11 of 28")
             st.markdown(
                 '<div class="unexpected-pattern">Unexpected Pattern 2: Higher Blood Glucose is not due to more carbs being eaten.</div>',
                 unsafe_allow_html=True)
-            st.markdown("""Cluster 2 shows significantly higher blood glucose readings in the early part of the night 
-                               (6 UTC).""")
+            st.markdown(f"""Cluster 2 shows significantly higher {colored_text('blood glucose', 'bg')} readings in the early part of the night 
+                               (6 UTC).""", unsafe_allow_html=True)
 
         if pattern_select == patterns['night_high_2']:
             st.metric("People with night highs", "11 of 28")
             st.markdown(
                 '<div class="unexpected-pattern">Unexpected Pattern 2: Higher Blood Glucose is not due to more carbs being eaten.</div>',
                 unsafe_allow_html=True)
-            st.markdown("""Cluster 2 shows significantly higher blood glucose readings in the the night (8 UTC).""")
+            st.markdown(f"""Cluster 2 shows significantly higher {colored_text('blood glucose', 'bg')} readings in the the night (8 UTC).""", unsafe_allow_html=True)
 
         if pattern_select == patterns['post_meal_rise']:
             st.metric("People with night highs", "17 of 28")
             st.markdown(
                 '<div class="unexpected-pattern">Unexpected Pattern 2: Higher Blood Glucose is not due to more carbs being eaten.</div>',
                 unsafe_allow_html=True)
-            st.markdown("""Both clusters show blood glucose rising post meals (carbohydrates spikes), see Cluster 1: 14
-               UTC and Cluster 2: 2 UTC""")
+            st.markdown(f"""Both clusters show {colored_text('blood glucose', 'bg')} rising post meals ({colored_text('carbohydrates', 'cob')} spikes), see Cluster 1: 14
+               UTC and Cluster 2: 2 UTC""",  unsafe_allow_html=True)
     with col2:  # plot
         # Select chart type
         graph_layout = select_chart_type(key="explore_patterns_graph_layout")

@@ -8,6 +8,10 @@ daily_ts_graph_description_text = "The graphs shows daily time series of scaled,
                                   "insulin, carbohydrates and blood glucose seperated into two clusters based on euclidian distance."
 
 
+def colored_text(text, color_key):
+    return f'<span style="color:{variate_colours[color_key]}">{text}</span>'
+
+
 def select_chart_type(key: str):
     col_head, col_radio = st.columns([2, 3])  # Adjust the ratio as needed
     with col_head:
@@ -110,7 +114,7 @@ def display_clusters_separately(df, fix_y):
     # Update axes
     for i in [1, 2]:
         title = f"Cluster {i} ({cluster_counts[i - 1]} days)"
-        title_color = cluster_colours[i-1]
+        title_color = cluster_colours[i - 1]
         fig.update_yaxes(
             title_text=title,
             title_font=dict(color=title_color),
