@@ -190,8 +190,8 @@ def display_explore_predictability():
             with st.container(border=True):
                 final_cols = st.columns(2)
                 with final_cols[0]:
-                    st.metric("Unique people who show predictability in at least one condition",
-                              value=f"{len(all_predictable_ids)} people of 28")
+                    st.metric("Unique people who show predictability from Insulin or Carbs",
+                              value=f"{people_string(len(all_predictable_ids))} of 28")
                 with final_cols[1]:
                     create_icon_array(indices_group1=all_predictable_ids, indices_group2=[], color_group1="#212121")
 
@@ -200,17 +200,25 @@ def display_explore_predictability():
             for i, col_name in enumerate(variates):
                 with cols[i]:
                     with st.container(border=True):
-                        st.markdown("People for which we can predict glucose from " + col_name,
+                        st.markdown("People for which we can predict glucose from **" + col_name + "**",
                                     help=help_for_col_name[col_name])
                         col1, col2 = st.columns(2)
                         with col1:
-                            st.metric("Some days", value=f"{unique_ids_one_cluster_only.count()}")
+                            st.metric("Some days", value=f"{one_cluster_only_ids[col_name].count()}")
                         with col2:
-                            st.metric("Most days", value=f"{unique_ids_both_clusters.count()}")
-                        create_icon_array(indices_group1=unique_ids_one_cluster_only,
-                                          indices_group2=unique_ids_both_clusters)
+                            st.metric("Most days", value=f"{both_clusters_ids[col_name].count()}")
+                        create_icon_array(indices_group1=one_cluster_only_ids[col_name],
+                                          indices_group2=both_clusters_ids[col_name])
 
+            st.caption("Note: Granger causality was used to determine forecastability")
 
+def people_string(n: int):
+    if n == 0:
+        return "No one"
+    elif n== 1:
+        return str(1) + " person"
+    else:
+        return str(n) + " people"
 def create_icon_array(indices_group1, indices_group2,
                       color_group1="#7CBDDA",
                       color_group2="#0A6C95",
