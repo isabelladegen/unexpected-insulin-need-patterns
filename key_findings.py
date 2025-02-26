@@ -27,11 +27,16 @@ temporal_units = {
     "Days of the week": "Days of the week",
     "Months of the year": "Months of the year",
 }
+patterns_by_number = {
+    1: ':one:   More **insulin** :syringe:...',
+    2: ':two:   Higher **blood glucose** :drop_of_blood: ...',
+    3: ':three:   Eating more **carbs** :green_apple:...',
+}
 # key = display name, value = dataframe pattern number
 selectable_patterns = {
-    ':one:   More **insulin** :syringe:...': 1,
-    ':two:   Higher **blood glucose** :drop_of_blood: ...': 2,
-    ':three:   Eating more **carbs** :green_apple:...': 3
+    patterns_by_number[1]: 1,
+    patterns_by_number[2]: 2,
+    patterns_by_number[3]: 3
 }
 
 expected_reasons = {
@@ -41,9 +46,9 @@ expected_reasons = {
 }
 
 unexpected_reasons = {
-    ':one:   More **insulin** :syringe:...': " was not due to more carbs.",
-    ':two:   Higher **blood glucose** :drop_of_blood: ...': " was not due to more carbs.",
-    ':three:   Eating more **carbs** :green_apple:...': " did not need more insulin."
+    ':one:   More **insulin** :syringe:...': " was not due to more **carbs**.",
+    ':two:   Higher **blood glucose** :drop_of_blood: ...': " was not due to more **carbs**.",
+    ':three:   Eating more **carbs** :green_apple:...': " did not need more **insulin**."
 }
 
 
@@ -176,7 +181,8 @@ def display_explore_correlations():
 
         # Expected
         with st.container(key="expected_patterns_associations"):
-            st.markdown("Associations for **expected pattern**: " + display_expected_reason(selected_pattern), help="↑ higher demographic values lead to **more frequent** patterns; ↓ higher demographic value lead to **less frequent** patterns")
+            st.markdown("Associations for **expected pattern**: " + display_expected_reason(selected_pattern),
+                        help="↑ higher demographic values lead to **more frequent** patterns; ↓ higher demographic value lead to **less frequent** patterns")
             if not expected_demographics:
                 st.caption("No associated demographics")
             else:
@@ -187,7 +193,8 @@ def display_explore_correlations():
 
         # Unexpected
         with st.container(key="unexpected_patterns_associations"):
-            st.markdown("Associations for **unexpected pattern**: " + display_unexpected_reason(selected_pattern), help="↑ higher demographic values lead to **more frequent** patterns; ↓ higher demographic value lead to **less frequent** patterns")
+            st.markdown("Associations for **unexpected pattern**: " + display_unexpected_reason(selected_pattern),
+                        help="↑ higher demographic values lead to **more frequent** patterns; ↓ higher demographic value lead to **less frequent** patterns")
             if not unexpected_demographics:
                 st.caption("No associated demographics")
             else:
