@@ -64,6 +64,9 @@ def main():
         link=None,
         icon_image=UNI_BRISTOL_ICON)
 
+    st.sidebar.image(QR_CODE, use_container_width=True)
+    st.sidebar.markdown("Scan QR code to explore on your device")
+
     display_header()
 
     page_tabs = st.tabs([
