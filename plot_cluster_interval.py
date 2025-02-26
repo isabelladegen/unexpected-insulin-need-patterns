@@ -6,7 +6,7 @@ daily_ts_graph_description_text = "The graphs shows daily time series of scaled,
                                   "insulin, carbohydrates and blood glucose seperated into two clusters based on euclidian distance."
 
 
-def select_chart_type():
+def select_chart_type(key:str):
     col_head, col_radio = st.columns([2, 3])  # Adjust the ratio as needed
     with col_head:
         st.caption('<div style="text-align: center; padding-top: 10px;">Select visualisation type:</div>',
@@ -17,6 +17,7 @@ def select_chart_type():
             ["Cluster-based", "Variate-based"],
             index=0,
             horizontal=True,
+            key=key,
             label_visibility="collapsed"  # Hides the empty label completely
         )
     return graph_layout

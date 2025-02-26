@@ -1,7 +1,6 @@
 import pandas as pd
 import streamlit as st
 
-from constants import individual_variations
 from plot_cluster_interval import plot_cluster_confidence_intervals_for_df, daily_ts_graph_description_text, \
     select_chart_type
 
@@ -10,7 +9,7 @@ different_days_stats_df = pd.read_csv('data/different_days-stats-results.csv', h
 
 
 def display_individual_variations():
-    st.header(individual_variations)
+    # st.header(individual_variations)
     st.markdown("Each person is unique. Insulin requirements vary "
                 "hugely between people and over time for the same person. No one size fits all.")
 
@@ -36,7 +35,7 @@ def display_individual_variations():
     st.subheader("Variation between people")
     st.write(
         "Even within a demographically similar group, we found substantial individual variations in glucose regulation patterns.")
-    graph_layout = select_chart_type()
+    graph_layout = select_chart_type(key="individual_variations_graph_layout")
     col1, col2 = st.columns(2)
     with col1:  # plot
         st.markdown("<p style='text-align: center; font-weight: bold; margin: 0;'>A person with almost flat lines</p>",

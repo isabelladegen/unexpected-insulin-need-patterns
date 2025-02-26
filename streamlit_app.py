@@ -1,7 +1,8 @@
 import streamlit as st
 from streamlit.components.v1 import html
 
-from constants import expected_colour, unexpected_colour, key_findings, explore_patterns, individual_variations, why_this_matters
+from constants import expected_colour, unexpected_colour, key_findings, explore_patterns, individual_variations, \
+    why_this_matters
 from explore_patterns import display_explore_patterns
 from inividual_variations import display_individual_variations
 from key_findings import display_main_findings
@@ -62,19 +63,32 @@ def main():
         link=None,
         icon_image=UNI_BRISTOL_ICON)
 
-    st.sidebar.title(content_title)
+    display_header()
 
-    page_1 = key_findings
-    page_2 = explore_patterns
-    # page_3 = ":clock1: Time of Day Analysis"
-    page_4 = individual_variations
-    page_5 = why_this_matters
-    page = st.sidebar.radio(
-        "Select...",
-        [page_1, page_2, page_4, page_5],
-        key='sidebar-radio'
-    )
+    page_tabs = st.tabs([
+        key_findings,
+        explore_patterns,
+        individual_variations,
+        why_this_matters
+    ])
 
+    # Content based on selection
+    with page_tabs[0]:
+        display_main_findings()
+
+    with page_tabs[1]:
+        display_explore_patterns()
+
+    with page_tabs[2]:
+        display_individual_variations()
+
+    with page_tabs[3]:
+        display_why_this_matters()
+
+    display_footer()
+
+
+def display_header():
     # Main body content
     st.title(content_title)
     st.caption("*Isabella Degen | Kate Robson Brown | Henry W. J. Reeve | Zahraa S. Abdallah*")
@@ -82,21 +96,8 @@ def main():
         st.markdown("""##### AI as a research tool to improve our understanding of complex biological systems.""")
 
 
-    # Content based on selection
-    if page == page_1:
-        display_main_findings()
-
-    if page == page_2:
-        display_explore_patterns()
-
-    if page == page_4:
-        display_individual_variations()
-
-    if page == page_5:
-        display_why_this_matters()
-
+def display_footer():
     st.divider()
-
     st.subheader("Additional Information")
     st.page_link("https://dx.doi.org/10.2196/44384", label="Read full paper", icon="📖")
     with st.expander("See who made this research possible"):
@@ -109,7 +110,6 @@ def main():
                     
                     We used the generative AI tool Claude Sonnet 3.5 by Anthropic to help with summarising our research content for this demo.
                     """)
-
     with st.expander("How we analysed the data"):
         st.markdown("""
         We analysed time series data on insulin on board (IOB), carbohydrates on board (COB) and 
@@ -124,7 +124,6 @@ def main():
         Effect sizes and Euclidean distances between variables were calculated. Finally, the forecastability of IOB, COB, 
         and IG for the clustered days was analysed using Granger causality. 
         """)
-
     with st.expander("What makes a pattern unexpected?"):
         st.markdown('''
                 Unexpected patterns are times when an increase of insulin doesn't lower blood glucose and/or when eating

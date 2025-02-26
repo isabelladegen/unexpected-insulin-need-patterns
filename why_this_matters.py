@@ -1,13 +1,13 @@
 import streamlit as st
 
-from constants import why_this_matters
 
 def display_why_this_matters():
-    st.header(why_this_matters)
+    # st.header(why_this_matters)
     st.caption("Our findings have implications for various areas.")
 
     st.subheader("For Health Care", divider=True)
-    st.markdown("Recognise why individualised approaches and patient partnerships are essential for successful T1D management.")
+    st.markdown(
+        "Recognise why individualised approaches and patient partnerships are essential for successful T1D management.")
     with st.expander("Explore implications for health care"):
         st.markdown("""
                     #### Treatment diversity
@@ -29,7 +29,8 @@ def display_why_this_matters():
                     - Healthcare systems must provide adequate training, time, and resources for HCPs to implement these approaches
                     """)
     st.subheader("For Policy & Regulation", divider=True)
-    st.markdown("Understand why current T1D management approaches are failing to meet targets for the majority of people with T1D.")
+    st.markdown(
+        "Understand why current T1D management approaches are failing to meet targets for the majority of people with T1D.")
     with st.expander("Explore policy implications and opportunities"):
         st.markdown(""" 
                     #### Evidence-Based Policy
@@ -52,7 +53,8 @@ def display_why_this_matters():
                     """)
 
     st.subheader("For AI Research", divider=True)
-    st.markdown("Understand challenges and opportunities for developing AI methods that can reveal unknown relationships in complex biological systems.")
+    st.markdown(
+        "Understand challenges and opportunities for developing AI methods that can reveal unknown relationships in complex biological systems.")
     with st.expander("Discover research opportunities"):
         st.markdown("""
                     #### Research Approach
@@ -81,7 +83,8 @@ def display_why_this_matters():
                     """)
 
     st.subheader("For T1D Research", divider=True)
-    st.markdown("Explore important research questions and methodological considerations arising directly from our findings.")
+    st.markdown(
+        "Explore important research questions and methodological considerations arising directly from our findings.")
     with st.expander("Explore research directions"):
         st.markdown(""" 
                     #### New Research Questions

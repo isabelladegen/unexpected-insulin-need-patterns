@@ -1,7 +1,6 @@
 import pandas as pd
 import streamlit as st
 
-from constants import explore_patterns
 from plot_cluster_interval import plot_cluster_confidence_intervals_for_df, daily_ts_graph_description_text, \
     select_chart_type
 
@@ -15,7 +14,7 @@ def display_explore_patterns():
                 'night_high_2': "High Glucose during night - Version 2",
                 'post_meal_rise': "Post meal rise"
                 }
-    st.header(explore_patterns)
+    # st.header(explore_patterns)
 
     # Controls section
     pattern_select = st.selectbox(
@@ -53,7 +52,7 @@ def display_explore_patterns():
                UTC and Cluster 2: 2 UTC""")
     with col2:  # plot
         # Select chart type
-        graph_layout = select_chart_type()
+        graph_layout = select_chart_type(key="explore_patterns_graph_layout")
         if pattern_select == patterns['night_high_1']:
             fig = plot_cluster_confidence_intervals_for_df(night_high_1_stats_df, fix_y=7, plot_type=graph_layout)
             st.plotly_chart(fig, use_container_width=True)

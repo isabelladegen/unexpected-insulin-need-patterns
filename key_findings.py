@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 import plotly.graph_objects as go
 
-from constants import expected_colour, unexpected_colour, key_findings
+from constants import expected_colour, unexpected_colour
 
 format_with_arrow = lambda number: f"{'↑' if number > 0 else '↓' if number < 0 else ''} {abs(number):.2f} τ"
 
@@ -113,7 +113,7 @@ def create_pattern_plot(df, selected_patterns):
 
 
 def display_main_findings():
-    st.header(key_findings)
+    # st.header(key_findings)
     st.subheader("1. Discovered unexpected temporal patterns in insulin needs", divider=True)
     st.markdown(
         "Current models cannot fully explain the observed unexpected patterns, highlighting the need for further research into underlying physiological mechanisms.")
