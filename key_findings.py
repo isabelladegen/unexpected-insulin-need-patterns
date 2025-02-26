@@ -1,3 +1,5 @@
+import random
+
 import pandas as pd
 import streamlit as st
 import plotly.graph_objects as go
@@ -6,6 +8,11 @@ from constants import expected_colour, unexpected_colour
 
 format_with_arrow = lambda number: f"{'↑' if number > 0 else '↓' if number < 0 else ''} {abs(number):.2f} τ"
 
+granger_causality_df = pd.read_csv("data/granger_causality.csv", index_col=0)
+predict_glucose_columns = {
+    'Insulin': 'IOB->IG',
+    'Carbs': 'COB->IG',
+}
 pattern_associations_df = pd.read_csv("data/demographic_associations.csv")
 # key = display name, value = dataframe column names
 demographic_factors = {
@@ -117,6 +124,153 @@ def create_pattern_plot(df, selected_patterns):
     return fig
 
 
+def display_explore_predictability():
+    lags = {
+        '1 hour': 1,
+        '2 hours': 2,
+        '3 hours': 3,
+    }
+    derivatives = {
+        'Original values': 0,
+        'Speed': 1,
+        'Acceleration': 2,
+        'Change of Acceleration': 3
+    }
+    variates = list(predict_glucose_columns.keys())
+    help_for_col_name = {
+        variates[0]: f'Shows for how many people of the 28 we can predict blood glucose from {variates[0]}',
+        variates[1]: f'Shows for how many people of the 28 we can predict blood glucose from {variates[1]}',
+    }
+    with st.expander("Explore for how many people we can predict blood glucose from insulin or carbs"):
+        total_people = 28  # we removed the id from the data for privacy
+        selected_lag = st.segmented_control(
+            "Select how many hours back in time to check for effects:", list(lags.keys()),
+            default=list(lags.keys())[0]
+        )
+        selected_derivative = st.segmented_control(
+            "Select aspects of the data to use to predict blood glucose:", list(derivatives.keys()),
+            default=list(derivatives.keys())[0]
+        )
+        if not selected_lag or not selected_derivative:
+            st.error("Please select at least one option each")
+        else:
+            # filter lag
+            lags_value = lags[selected_lag]
+            g_filtered = granger_causality_df[granger_causality_df["lag"] == lags_value]
+
+            # filter derivative
+            derivative_value = derivatives[selected_derivative]
+            g_filtered = g_filtered[g_filtered["no_derivatives"] == derivative_value]
+
+            # st.write(g_filtered)
+
+
+            all_predictable_ids = set()
+            one_cluster_only_ids = {}
+            both_clusters_ids = {}
+            # calculate ids
+            for i, col_name in enumerate(variates):
+                rel_name = predict_glucose_columns[col_name]
+                # DataFrame showing whether each ID-cluster combination has any True values
+                has_true_by_id_cluster = g_filtered.groupby(['id', 'Cluster'])[rel_name].any().reset_index()
+                # Count how many clusters have True for each ID
+                trues_per_id = has_true_by_id_cluster[has_true_by_id_cluster[rel_name] == True].groupby(
+                    'id').size()
+
+                # keep trac of ids with trues
+                ids_with_any_true = trues_per_id.index.tolist()
+                all_predictable_ids.update(ids_with_any_true)
+
+                # Filter for IDs that have exactly 1 cluster with True (not both)
+                unique_ids_one_cluster_only = trues_per_id[trues_per_id == 1]
+                unique_ids_both_clusters = trues_per_id[trues_per_id == 2]
+                one_cluster_only_ids[col_name] = unique_ids_one_cluster_only
+                both_clusters_ids[col_name] = unique_ids_both_clusters
+
+            with st.container(border=True):
+                final_cols = st.columns(2)
+                with final_cols[0]:
+                    st.metric("Unique people who show predictability in at least one condition",
+                              value=f"{len(all_predictable_ids)} people of 28")
+                with final_cols[1]:
+                    create_icon_array(indices_group1=all_predictable_ids, indices_group2=[], color_group1="#212121")
+
+            # display clusters
+            cols = st.columns(len(variates))
+            for i, col_name in enumerate(variates):
+                with cols[i]:
+                    with st.container(border=True):
+                        st.markdown("People for which we can predict glucose from " + col_name,
+                                    help=help_for_col_name[col_name])
+                        col1, col2 = st.columns(2)
+                        with col1:
+                            st.metric("Some days", value=f"{unique_ids_one_cluster_only.count()}")
+                        with col2:
+                            st.metric("Most days", value=f"{unique_ids_both_clusters.count()}")
+                        create_icon_array(indices_group1=unique_ids_one_cluster_only,
+                                          indices_group2=unique_ids_both_clusters)
+
+
+def create_icon_array(indices_group1, indices_group2,
+                      color_group1="#7CBDDA",
+                      color_group2="#0A6C95",
+                      inactive_color="#F0F0F0"):
+    # SVG person silhouette
+    unique_id = random.randint(10, 1000)
+    person_svg = """
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm0 10c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+        """
+
+    # Use unique class names with the unique_id
+    html = f"""
+        <style>
+        .icon-grid-{unique_id} {{
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 8px;
+        }}
+        .icon-{unique_id} {{
+            text-align: center;
+        }}
+        .group1-{unique_id} {{
+            color: {color_group1};
+        }}
+        .group2-{unique_id} {{
+            color: {color_group2};
+        }}
+        .inactive-{unique_id} {{
+            color: {inactive_color};
+        }}
+        </style>
+        """
+
+    # 4 rows of 7 icons each
+    for row in range(4):
+        html += f'<div class="icon-grid-{unique_id}">'
+        for col in range(7):
+            # Calculate position (0-27)
+            position = row * 7 + col
+
+            # Convert to 1-based indexing
+            index = position + 1
+
+            # Determine which group this index belongs to
+            if index in indices_group1:
+                icon_class = f"group1-{unique_id}"
+            elif index in indices_group2:
+                icon_class = f"group2-{unique_id}"
+            else:
+                icon_class = f"inactive-{unique_id}"
+
+            html += f'<div class="icon-{unique_id} {icon_class}">{person_svg}</div>'
+        html += '</div>'
+
+    st.markdown(html, unsafe_allow_html=True)
+
+
 def display_main_findings():
     # st.header(key_findings)
     st.subheader("1. Discovered unexpected temporal patterns in insulin needs", divider=True)
@@ -137,6 +291,7 @@ def display_main_findings():
                  divider=True)
     st.markdown(
         "The causal relationship between insulin, carbohydrates and glucose levels varies widely between individuals and situations. This variability makes reliable glucose prediction difficult without information about what drives these unexpected patterns, highlighting the need to include more causal factors.")
+    display_explore_predictability()
 
 
 def display_explore_correlations():
